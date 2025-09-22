@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import ChatInput from "@/components/ui/chat-input";
 
+export const dynamic = "force-dynamic";
+
 const Page = async () => {
   const session = await getSession();
   if (!session) redirect("/login");
@@ -18,7 +20,7 @@ const Page = async () => {
           </h2>
         </div>
 
-        <ChatInput />
+        <ChatInput placeholder="How can I help you today?" />
       </div>
     </section>
   );

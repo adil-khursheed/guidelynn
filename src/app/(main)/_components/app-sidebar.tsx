@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 
 import {
@@ -26,6 +26,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ThemeToggle from "@/components/ui/theme-toggle";
+import { getQueryClient, trpc } from "@/trpc/server";
+import RecentChats from "./recent-chats";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 const items = [
   {
@@ -41,6 +44,9 @@ const items = [
 ];
 
 const AppSidebar = () => {
+  const queryClient = getQueryClient();
+  void queryClient.prefetchQuery(trpc.chat.getChats.queryOptions());
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -70,18 +76,11 @@ const AppSidebar = () => {
         <SidebarGroupLabel>Recent Chats</SidebarGroupLabel>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
+            <HydrationBoundary state={dehydrate(queryClient)}>
+              <Suspense>
+                <RecentChats />
+              </Suspense>
+            </HydrationBoundary>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

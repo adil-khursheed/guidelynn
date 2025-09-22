@@ -8,23 +8,121 @@ import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./form";
-import { useParams } from "next/navigation";
+import { useTRPC } from "@/trpc/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCreateChat } from "@/hooks/use-create-chat";
+import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
+import { useChat } from "@/contexts/chat-context";
+
+interface ChatInputProps {
+  chatId?: string;
+  onSendMessage?: (message: string) => void;
+  placeholder?: string;
+  isLoading?: boolean;
+}
 
 const ChatFormSchema = z.object({
   message: z.string().min(1, "Message is required"),
 });
 
-const ChatInput = () => {
+const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
+  const { setMessages, setAiResponse } = useChat();
+
   const form = useForm<z.infer<typeof ChatFormSchema>>({
     resolver: zodResolver(ChatFormSchema),
+    defaultValues: {
+      message: "",
+    },
   });
 
-  const params = useParams();
-  console.log({ params });
+  const formMessage = form.watch("message");
+
+  const { startConversation, isPending: creatingChat } = useCreateChat();
+
+  const queryClient = useQueryClient();
+  const trpc = useTRPC();
+
+  const { mutate: sendMessage, isPending } = useMutation(
+    trpc.chat.sendNewMessage.mutationOptions({
+      onSuccess: async (data) => {
+        for await (const textPart of data.message) {
+          setAiResponse((prev) => prev + textPart);
+        }
+
+        queryClient.invalidateQueries({
+          queryKey: trpc.chat.getChatById.queryKey(),
+        });
+      },
+      onError: (error) => {
+        toast.error("Error", {
+          description: error.message || "Failed to send message",
+        });
+      },
+    })
+  );
+
+  const onSubmit = async (data: z.infer<typeof ChatFormSchema>) => {
+    if (creatingChat) return;
+
+    if (chatId) {
+      const messageId = uuidv4();
+
+      const optimisticMessage = {
+        id: messageId,
+        chatId,
+        role: "user",
+        message: data.message,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      setMessages((prev) => [...prev, optimisticMessage]);
+      sendMessage({
+        messageId,
+        chatId,
+        message: data.message,
+      });
+    } else {
+      const messageId = uuidv4();
+      const newChatId = uuidv4();
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: messageId,
+          chatId: newChatId,
+          role: "user",
+          message: data.message,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+
+      await startConversation(data.message, newChatId);
+
+      sendMessage({
+        messageId,
+        chatId: newChatId,
+        message: data.message,
+      });
+    }
+
+    form.reset();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      form.handleSubmit(onSubmit)();
+    }
+  };
 
   return (
     <Form {...form}>
-      <form className="w-full border border-input rounded-2xl p-4 dark:bg-input/30 shadow-xs">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full border border-input rounded-2xl p-4 dark:bg-input/30 shadow-xs">
         <FormField
           name="message"
           control={form.control}
@@ -33,7 +131,9 @@ const ChatInput = () => {
               <FormControl>
                 <Textarea
                   {...field}
-                  placeholder="How can I help you today?"
+                  placeholder={placeholder}
+                  disabled={creatingChat || isPending}
+                  onKeyDown={handleKeyDown}
                   className="max-h-96 resize-none border-0 shadow-none dark:bg-transparent focus-visible:border-0 focus-visible:ring-0 p-0"
                 />
               </FormControl>
@@ -42,7 +142,11 @@ const ChatInput = () => {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit" size={"icon"} className="cursor-pointer">
+          <Button
+            type="submit"
+            size={"icon"}
+            disabled={!formMessage?.trim() || creatingChat || isPending}
+            className="cursor-pointer">
             <ArrowUp />
           </Button>
         </div>

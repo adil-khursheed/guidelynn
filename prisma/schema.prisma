@@ -20,12 +20,14 @@ model User {
   email         String    @unique
   emailVerified Boolean   @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
+  user_profiles UserProfile?
   chats         Chat[]
 
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+  
   @@map("users")
 }
 
@@ -33,12 +35,13 @@ model Session {
   id        String   @id
   expiresAt DateTime
   token     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   ipAddress String?
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("sessions")
 }
@@ -56,6 +59,7 @@ model Account {
   refreshTokenExpiresAt DateTime?
   scope                 String?
   password              String?
+
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
@@ -67,10 +71,31 @@ model Verification {
   identifier String
   value      String
   expiresAt  DateTime
+
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verifications")
+}
+
+model UserProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  currentRole String?
+  experience  Int?
+  industry    String?
+  skills      String[]
+  interests   String[]
+  education   String?
+  location    String?
+  careerStage String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  @@map("user_profiles")
 }
 
 
@@ -79,8 +104,28 @@ model Chat {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String
+  messages  Message[]
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
   @@map("chats")
+}
+
+enum Role {
+  user
+  assistant
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  role      Role
+  message   String   @db.Text
+  chatId    String
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@map("messages")
 }
