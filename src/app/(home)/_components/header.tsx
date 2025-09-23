@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const Header = () => {
   return (
-    <header className="fixed inset-x-0 p-3 border-b border-input">
+    <header className="fixed inset-x-0 p-3">
       <div className="flex items-center justify-between sm:px-3 max-w-[1563px] mx-auto">
         <h1 className="text-lg sm:text-2xl font-bold font-serif text-primary">
           Guidelynn

@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
-    <section className="px-4 flex-1 border-b border-input mb-3 flex items-center justify-center pt-[60px]">
-      <div className="flex-1 flex min-h-[calc(100vh-74px)] flex-col items-center justify-center border-l border-r border-input max-w-[1563px] mx-auto text-center space-y-5 p-3 md:p-5">
+    <section className="px-4 flex-1 mb-3 flex items-center justify-center pt-[60px]">
+      <div className="flex-1 flex min-h-[calc(100vh-74px)] flex-col items-center justify-center max-w-[1563px] mx-auto text-center space-y-5 p-3 md:p-5">
         <h2 className="text-4xl font-bold font-serif text-primary">
           AI Career Counseling That Actually Understands You
         </h2>

@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import {
-  ChevronUp,
-  MessagesSquareIcon,
-  PlusCircleIcon,
-  User2Icon,
-} from "lucide-react";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { getQueryClient, trpc } from "@/trpc/server";
+import { getSession } from "@/lib/auth";
+
+import { ChevronUp, User2Icon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -26,48 +26,43 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ThemeToggle from "@/components/ui/theme-toggle";
-import { getQueryClient, trpc } from "@/trpc/server";
+import { Skeleton } from "@/components/ui/skeleton";
+
 import RecentChats from "./recent-chats";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import NavMenuItems from "./nav-menu-items";
+import ChatsSkeleton from "./chats-skeleton";
+import LogoutButton from "./logout-button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-const items = [
-  {
-    title: "New Chat",
-    url: "/new",
-    icon: PlusCircleIcon,
-  },
-  {
-    title: "Chats",
-    url: "recents",
-    icon: MessagesSquareIcon,
-  },
-];
+const AppSidebar = async () => {
+  const session = await getSession();
+  if (!session) redirect("/login");
 
-const AppSidebar = () => {
+  const user = session?.user;
+
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.chat.getChats.queryOptions());
 
   return (
     <Sidebar>
       <SidebarHeader>
-        <h3 className="text-lg font-bold text-primary font-serif">Guidelynn</h3>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href={"/"}>
+                <span className="text-lg font-bold text-primary font-serif">
+                  Guidelynn
+                </span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
 
       <SidebarContent className="max-h-max">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
+            <NavMenuItems />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
@@ -77,7 +72,7 @@ const AppSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent>
             <HydrationBoundary state={dehydrate(queryClient)}>
-              <Suspense>
+              <Suspense fallback={<ChatsSkeleton />}>
                 <RecentChats />
               </Suspense>
             </HydrationBoundary>
@@ -85,25 +80,32 @@ const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
-        <SidebarMenu className="">
+      <SidebarFooter className="relative">
+        <SidebarMenu>
           <SidebarMenuItem className="flex items-center justify-between gap-2">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  <User2Icon /> Username
-                  <ChevronUp className="ml-auto" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
+              <Suspense fallback={<Skeleton className="w-full h-8" />}>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton>
+                    <User2Icon /> {user.name}
+                    <ChevronUp className="ml-auto" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+              </Suspense>
               <DropdownMenuContent side="top" className="w-full">
                 <DropdownMenuItem>
-                  <span>Account</span>
+                  <span className="flex items-center gap-3">
+                    <Avatar>
+                      <AvatarFallback>
+                        {user.name.split(" ")[0].charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    {user.name}
+                  </span>
                 </DropdownMenuItem>
+
                 <DropdownMenuItem>
-                  <span>Billing</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Sign out</span>
+                  <LogoutButton />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

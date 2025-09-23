@@ -10,3 +10,10 @@ export function generateConversationTitle(message: string): string {
   const title = words.slice(0, 6).join(" ");
   return title.length < message.length ? `${title}...` : title;
 }
+
+export function capitalizeFirstLetter(sentence: string) {
+  const firstLetterCap = sentence.charAt(0).toUpperCase();
+  const remainingLetters = sentence.slice(1);
+
+  return firstLetterCap + remainingLetters;
+}

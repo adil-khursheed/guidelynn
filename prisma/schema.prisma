@@ -84,7 +84,7 @@ model UserProfile {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   currentRole String?
-  experience  Int?
+  experience  String?
   industry    String?
   skills      String[]
   interests   String[]

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,6 +16,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import GoogleSignIn from "../../_components/google-signin";
+import { useRouter } from "next/navigation";
+import { login } from "../_actions/login";
+import { Loader2Icon } from "lucide-react";
 
 const SignInFormSchema = z.object({
   email: z.email({ error: "Invalid email address" }),
@@ -25,6 +28,10 @@ const SignInFormSchema = z.object({
 });
 
 const SignInForm = () => {
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof SignInFormSchema>>({
     resolver: zodResolver(SignInFormSchema),
     defaultValues: {
@@ -33,8 +40,17 @@ const SignInForm = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof SignInFormSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof SignInFormSchema>) => {
+    try {
+      setLoading(true);
+
+      await login(data);
+      router.replace("/new");
+    } catch (err) {
+      console.log("Login Err => ", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,7 +72,11 @@ const SignInForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="johndoe@gmail.com" />
+                  <Input
+                    {...field}
+                    placeholder="johndoe@gmail.com"
+                    disabled={loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -70,7 +90,11 @@ const SignInForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter a password" />
+                  <Input
+                    {...field}
+                    placeholder="Enter a password"
+                    disabled={loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -83,8 +107,11 @@ const SignInForm = () => {
             </Button>
           </div>
 
-          <Button type="submit" className="w-full cursor-pointer">
-            Sign In
+          <Button
+            disabled={loading}
+            type="submit"
+            className="w-full cursor-pointer">
+            {loading ? <Loader2Icon className="animate-spin" /> : "Sign In"}
           </Button>
         </form>
       </Form>

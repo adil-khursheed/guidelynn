@@ -3,28 +3,16 @@
 import React, { useState } from "react";
 import Google from "@/components/icons/google";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
 import { Loader2Icon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { googleSignIn } from "../_actions/google-signin";
 
 const GoogleSignIn = () => {
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
-
   const signin = async () => {
     try {
       setLoading(true);
-      const { error } = await authClient.signIn.social({
-        provider: "google",
-      });
-
-      if (error) {
-        console.log("Better-auth error => ", error);
-        return;
-      }
-
-      router.replace("/new");
+      await googleSignIn();
     } catch (err) {
       console.log("Catch err => ", err);
     } finally {

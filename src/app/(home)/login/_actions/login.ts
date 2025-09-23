@@ -2,18 +2,13 @@
 
 import { auth } from "@/lib/auth";
 
-export const signup = async (data: {
-  name: string;
-  email: string;
-  password: string;
-}) => {
+export const login = async (data: { email: string; password: string }) => {
   try {
-    await auth.api.signUpEmail({
+    await auth.api.signInEmail({
       body: {
         email: data.email,
         password: data.password,
-        name: data.name,
-        callbackURL: "/info/user",
+        callbackURL: "/new",
         rememberMe: true,
       },
     });

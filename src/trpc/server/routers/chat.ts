@@ -136,7 +136,7 @@ export const chatRouter = createTRPCRouter({
 
       Current user profile:
       - Current Role: ${userProfile?.currentRole || "Not specified"}
-      - Experience: ${userProfile?.experience || 0} years
+      - Experience: ${userProfile?.experience || "0"} years
       - Industry: ${userProfile?.industry || "Not specified"}
       - Skills: ${userProfile?.skills?.join(", ") || "Not specified"}
       - Interests: ${userProfile?.interests?.join(", ") || "Not specified"}

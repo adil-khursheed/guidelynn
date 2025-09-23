@@ -50,9 +50,9 @@ const SignUpForm = () => {
       setLoading(true);
 
       await signup(data);
-      router.push("/new");
+      router.replace("/info/user");
     } catch (err) {
-      console.log("Err => ", err);
+      console.log("Signup Err => ", err);
     } finally {
       setLoading(false);
     }
@@ -116,11 +116,7 @@ const SignUpForm = () => {
             disabled={loading}
             type="submit"
             className="w-full cursor-pointer">
-            {loading ? (
-              <Loader2Icon className="animate-spin text-primary" />
-            ) : (
-              "Sign Up"
-            )}
+            {loading ? <Loader2Icon className="animate-spin" /> : "Sign Up"}
           </Button>
         </form>
       </Form>

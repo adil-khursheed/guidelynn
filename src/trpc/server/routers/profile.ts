@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../init";
+import { ProfileFormSchema } from "@/schemas/profile-schema";
 
 export const profileRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
@@ -11,18 +11,7 @@ export const profileRouter = createTRPCRouter({
   }),
 
   update: protectedProcedure
-    .input(
-      z.object({
-        currentRole: z.string().optional(),
-        experience: z.number().optional(),
-        industry: z.string().optional(),
-        skills: z.array(z.string()).optional(),
-        interests: z.array(z.string()).optional(),
-        education: z.string().optional(),
-        location: z.string().optional(),
-        careerStage: z.string().optional(),
-      })
-    )
+    .input(ProfileFormSchema)
     .mutation(async ({ ctx, input }) => {
       const userProfile = await ctx.prisma.userProfile.upsert({
         where: { userId: ctx.user.id },
