@@ -4,6 +4,7 @@ import { getSession } from "@/lib/auth";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import ChatInterface from "./_components/chat-interface";
+import ChatSkeleton from "./_components/chat-skeleton";
 
 const Page = async ({ params }: { params: Promise<{ chatId: string }> }) => {
   const session = await getSession();
@@ -18,7 +19,7 @@ const Page = async ({ params }: { params: Promise<{ chatId: string }> }) => {
   return (
     <section className="h-screen flex flex-col">
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense>
+        <Suspense fallback={<ChatSkeleton />}>
           <ChatInterface chatId={chatId} />
         </Suspense>
       </HydrationBoundary>

@@ -95,7 +95,7 @@ export const chatRouter = createTRPCRouter({
         messageId: z.uuidv4(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async function* ({ ctx, input }) {
       const userId = ctx.user.id;
 
       const { message, chatId, messageId } = input;
@@ -159,13 +159,20 @@ export const chatRouter = createTRPCRouter({
             content: msg.message,
           })),
         ],
+        stream: true,
         temperature: 0.7,
         max_completion_tokens: 1024,
       });
 
-      const aiResponse =
-        response.choices[0].message.content ||
-        "I'm sorry, I couldn't generate a response.";
+      let aiResponse = "";
+      for await (const chunk of response) {
+        const targetIndex = 0;
+        const target = chunk.choices[targetIndex];
+        const content = target?.delta?.content ?? "";
+        yield content;
+
+        aiResponse += content;
+      }
 
       const saveAIMessage = await ctx.prisma.message.create({
         data: {

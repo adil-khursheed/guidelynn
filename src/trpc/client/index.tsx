@@ -4,7 +4,11 @@ import React, { useState } from "react";
 import superjson from "superjson";
 import { QueryClientProvider } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import {
+  createTRPCClient,
+  httpBatchLink,
+  httpBatchStreamLink,
+} from "@trpc/client";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 
 import { makeQueryClient } from "./query-client";
@@ -40,7 +44,7 @@ export const TRPCReactProvider = ({
   const [trpcClient] = useState(() =>
     createTRPCClient<AppRouter>({
       links: [
-        httpBatchLink({
+        httpBatchStreamLink({
           transformer: superjson,
           url: getUrl(),
         }),

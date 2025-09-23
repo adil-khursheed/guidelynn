@@ -21,7 +21,7 @@ const RecentChats = () => {
   return (
     <SidebarMenu>
       {data.map((item) => (
-        <SidebarMenuItem key={item.title}>
+        <SidebarMenuItem key={item.id}>
           <SidebarMenuButton asChild isActive={pathname === `/chat/${item.id}`}>
             <Link href={`/chat/${item.id}`}>
               <span>{item.title}</span>

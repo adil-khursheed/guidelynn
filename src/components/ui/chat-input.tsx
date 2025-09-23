@@ -3,7 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Square } from "lucide-react";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,7 +27,8 @@ const ChatFormSchema = z.object({
 });
 
 const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
-  const { setMessages, setAiResponse } = useChat();
+  const { setMessages, setAiResponse, setIsResponding, isResponding } =
+    useChat();
 
   const form = useForm<z.infer<typeof ChatFormSchema>>({
     resolver: zodResolver(ChatFormSchema),
@@ -46,15 +47,19 @@ const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
   const { mutate: sendMessage, isPending } = useMutation(
     trpc.chat.sendNewMessage.mutationOptions({
       onSuccess: async (data) => {
-        for await (const textPart of data.message) {
+        for await (const textPart of data) {
           setAiResponse((prev) => prev + textPart);
         }
 
         queryClient.invalidateQueries({
           queryKey: trpc.chat.getChatById.queryKey(),
         });
+        setIsResponding(false);
+        setAiResponse("");
       },
       onError: (error) => {
+        setIsResponding(false);
+        setAiResponse("");
         toast.error("Error", {
           description: error.message || "Failed to send message",
         });
@@ -66,6 +71,7 @@ const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
     if (creatingChat) return;
 
     if (chatId) {
+      setIsResponding(true);
       const messageId = uuidv4();
 
       const optimisticMessage = {
@@ -84,6 +90,7 @@ const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
         message: data.message,
       });
     } else {
+      setIsResponding(true);
       const messageId = uuidv4();
       const newChatId = uuidv4();
 
@@ -132,7 +139,7 @@ const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
                 <Textarea
                   {...field}
                   placeholder={placeholder}
-                  disabled={creatingChat || isPending}
+                  disabled={creatingChat || isPending || isResponding}
                   onKeyDown={handleKeyDown}
                   className="max-h-96 resize-none border-0 shadow-none dark:bg-transparent focus-visible:border-0 focus-visible:ring-0 p-0"
                 />
@@ -145,9 +152,15 @@ const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
           <Button
             type="submit"
             size={"icon"}
-            disabled={!formMessage?.trim() || creatingChat || isPending}
+            disabled={
+              !formMessage?.trim() || creatingChat || isPending || isResponding
+            }
             className="cursor-pointer">
-            <ArrowUp />
+            {creatingChat || isPending || isResponding ? (
+              <Square />
+            ) : (
+              <ArrowUp />
+            )}
           </Button>
         </div>
       </form>

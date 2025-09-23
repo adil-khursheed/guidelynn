@@ -5,6 +5,8 @@ import { headers } from "next/headers";
 
 export const googleSignIn = async () => {
   try {
+    console.log("here====");
+
     await auth.api.signInSocial({
       headers: await headers(),
       body: {
@@ -14,6 +16,8 @@ export const googleSignIn = async () => {
         newUserCallbackURL: "/info/user",
       },
     });
+
+    console.log("here after====");
   } catch (error) {
     console.log(error);
     throw new Error("Google sign in failed.");

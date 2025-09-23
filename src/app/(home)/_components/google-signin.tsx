@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Google from "@/components/icons/google";
 import { Button } from "@/components/ui/button";
 import { Loader2Icon } from "lucide-react";
-import { googleSignIn } from "../_actions/google-signin";
+import { authClient } from "@/lib/auth-client";
 
 const GoogleSignIn = () => {
   const [loading, setLoading] = useState(false);
@@ -12,7 +12,11 @@ const GoogleSignIn = () => {
   const signin = async () => {
     try {
       setLoading(true);
-      await googleSignIn();
+      const data = await authClient.signIn.social({
+        provider: "google",
+      });
+
+      console.log("Social data => ", data);
     } catch (err) {
       console.log("Catch err => ", err);
     } finally {
@@ -22,6 +26,7 @@ const GoogleSignIn = () => {
 
   return (
     <Button
+      type="button"
       onClick={signin}
       variant="outline"
       disabled={loading}

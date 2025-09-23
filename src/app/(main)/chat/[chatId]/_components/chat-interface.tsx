@@ -6,11 +6,12 @@ import ChatInput from "@/components/ui/chat-input";
 import { useChat } from "@/contexts/chat-context";
 import { useTRPC } from "@/trpc/client";
 import Message from "./message";
+import { ResponseLoader } from "@/components/ui/response-loader";
 
 const ChatInterface = ({ chatId }: { chatId: string }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, setMessages } = useChat();
+  const { messages, setMessages, isResponding } = useChat();
 
   const trpc = useTRPC();
 
@@ -33,11 +34,11 @@ const ChatInterface = ({ chatId }: { chatId: string }) => {
         return merged;
       });
     }
-  }, [data, setMessages]);
 
-  useEffect(() => {
-    setMessages([]); // reset when chatId changes
-  }, [chatId, setMessages]);
+    return () => {
+      setMessages([]);
+    };
+  }, [data, setMessages]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -66,6 +67,11 @@ const ChatInterface = ({ chatId }: { chatId: string }) => {
             <div></div>
           )}
 
+          {isResponding && (
+            <div className="px-6">
+              <ResponseLoader text="Thinking..." />
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </div>
       </div>
