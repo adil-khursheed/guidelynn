@@ -12,18 +12,13 @@ const GoogleSignIn = () => {
   const signin = async () => {
     try {
       setLoading(true);
-      const data = await authClient.signIn.social({
+      await authClient.signIn.social({
         provider: "google",
         callbackURL: "/new",
         newUserCallbackURL: "/info/user",
-        requestSignUp: true,
-        errorCallbackURL: "/",
-        disableRedirect: false,
       });
-
-      console.log("Social data => ", data);
-    } catch (err) {
-      console.log("Catch err => ", err);
+    } catch (error) {
+      console.error("Google sign-in error:", error);
     } finally {
       setLoading(false);
     }

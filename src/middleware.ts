@@ -4,9 +4,11 @@ import { getSessionCookie } from "better-auth/cookies";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const isPublicPath = ["/", "/login", "/signup", "/api/auth/**"].includes(
-    pathname
-  );
+  // Check if it's an auth API route
+  const isAuthApiRoute = pathname.startsWith("/api/auth/");
+
+  const isPublicPath =
+    ["/", "/login", "/signup"].includes(pathname) || isAuthApiRoute;
 
   const sessionCookie = getSessionCookie(req, {
     cookiePrefix: "_guidelynn",
@@ -29,6 +31,5 @@ export const config = {
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     // Always run for API routes
     "/(api|trpc)(.*)",
-    "/reset-password/:path*",
   ],
 };
