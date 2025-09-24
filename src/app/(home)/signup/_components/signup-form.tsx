@@ -66,16 +66,16 @@ const SignUpForm = () => {
 
   return (
     <div className="space-y-4">
-      <GoogleSignIn />
-
-      <div className="flex items-center justify-between gap-4">
-        <div className="w-full h-px bg-input" />
-        <span className="text-sm text-muted-foreground">OR</span>
-        <div className="w-full h-px bg-input" />
-      </div>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <GoogleSignIn />
+
+          <div className="flex items-center justify-between gap-4">
+            <div className="w-full h-px bg-input" />
+            <span className="text-sm text-muted-foreground">OR</span>
+            <div className="w-full h-px bg-input" />
+          </div>
+
           <FormField
             control={form.control}
             name="name"

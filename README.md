@@ -1,36 +1,139 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GuideLynn - AI-Powered Career Counselling
+
+GuideLynn is an advanced AI-powered application designed to provide enhanced career counselling services. It helps users navigate their career paths, make informed decisions, and receive personalized guidance based on their skills, interests, and goals.
+
+## Features
+
+- **Personalized Career Guidance**: Get tailored advice based on your profile and career goals
+- **Skill Assessment**: Identify your strengths and areas for improvement
+- **Industry Insights**: Access up-to-date information about various industries and job markets
+- **Interactive Chat Interface**: Engage in natural conversations with our AI counsellor
+- **Profile Management**: Create and update your professional profile to receive more relevant guidance
+
+## Live Demo
+
+You can access the live, deployed version of the application here:
+
+**[[Guidelynn](https://guidelynn.vercel.app/)]**
+
+## Screenshots
+
+### Landing Page
+
+![Landing Page](./public/landing-page.png)
+
+### New Chat Page
+
+![New Chat Page](./public/new-chat-page.png)
+
+### Chat Interface
+
+![Chat Page](./public/chat-page.png)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js 18.x or higher
+- npm
+- PostgreSQL database
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/adilkhursheed/guidelynn.git
+   cd guidelynn
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   Create a `.env` file in the root directory with the following variables:
+
+   ```
+   # Database (NeonDB)
+   DATABASE_URL="postgresql://username:password@localhost:5432/guidelynn"
+
+   # Authentication (NextAuth.js)
+   BETTER_AUTH_URL="http://localhost:3000"
+   BETTER_AUTH_SECRET="your-nextauth-secret"
+   NEXT_PUBLIC_API_URL="http://localhost:3000"
+
+   # OAuth Providers
+   GOOGLE_CLIENT_ID="your-google-client-id"
+   GOOGLE_CLIENT_SECRET="your-google-client-secret"
+
+   # AI Provider
+   OPEN_ROUTER_API_KEY="your-open-router-api-key"
+   MEM0_API_KEY="your-mem0-api-key"
+   ```
+
+4. Initialize the database:
+
+   ```bash
+   npx @better-auth/cli migrate
+   ```
+
+5. Push the prisma schema to the database:
+
+   ```bash
+   npx prisma db push
+   ```
+
+6. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+7. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
+
+## Project Structure
+
+```
+guidelynn/
+├── prisma/              # Database schema and migrations
+├── public/              # Static assets
+├── src/
+│   ├── app/             # Next.js App Router pages
+│   ├── components/      # Reusable UI components
+│   ├── contexts/        # React contexts
+│   ├── hooks/           # Custom React hooks
+│   ├── lib/             # Utility functions and libraries
+│   ├── schemas/         # Validation schemas
+│   ├── trpc/            # tRPC API routes
+│   └── types/           # TypeScript type definitions
+└── ...
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Frontend**: Next.js, React, Tailwind CSS, shadcn/ui, Tanstack Query
+- **Backend**: Next.js API routes, tRPC
+- **Database**: PostgreSQL (NeonDB), Prisma ORM
+- **Authentication**: Better-Auth
+- **AI Integration**: Open-router API
+- **AI Memory**: Mem0.ai
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
 
-## Learn More
+The application can be deployed on Vercel:
 
-To learn more about Next.js, take a look at the following resources:
+1. Push your code to a GitHub repository
+2. Import the project in Vercel
+3. Configure the environment variables
+4. Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License - see the LICENSE file for details.

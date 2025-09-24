@@ -14,6 +14,11 @@ const GoogleSignIn = () => {
       setLoading(true);
       const data = await authClient.signIn.social({
         provider: "google",
+        callbackURL: "/new",
+        newUserCallbackURL: "/info/user",
+        requestSignUp: true,
+        errorCallbackURL: "/",
+        disableRedirect: false,
       });
 
       console.log("Social data => ", data);

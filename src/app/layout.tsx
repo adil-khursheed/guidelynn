@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   title: "Guidelynn",
   description:
     "An AI powered career counselor that helps you find the right job for you",
+  openGraph: {
+    url: process.env.NEXT_PUBLIC_API_URL,
+  },
 };
 
 export default function RootLayout({
