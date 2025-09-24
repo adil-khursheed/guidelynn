@@ -27,8 +27,13 @@ const ChatFormSchema = z.object({
 });
 
 const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
-  const { setMessages, setAiResponse, setIsResponding, isResponding } =
-    useChat();
+  const {
+    setMessages,
+    setIsStreaming,
+    isStreaming,
+    setIsResponding,
+    isResponding,
+  } = useChat();
 
   const form = useForm<z.infer<typeof ChatFormSchema>>({
     resolver: zodResolver(ChatFormSchema),
@@ -47,19 +52,38 @@ const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
   const { mutate: sendMessage, isPending } = useMutation(
     trpc.chat.sendNewMessage.mutationOptions({
       onSuccess: async (data) => {
+        const aiMessageId = uuidv4();
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: aiMessageId,
+            chatId: chatId!,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            role: "assistant",
+            message: "",
+          },
+        ]);
+
+        let aiResponse = "";
+        setIsResponding(false);
+        setIsStreaming(true);
         for await (const textPart of data) {
-          setAiResponse((prev) => prev + textPart);
+          aiResponse += textPart;
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.id === aiMessageId ? { ...msg, message: aiResponse } : msg
+            )
+          );
         }
+        setIsStreaming(false);
 
         queryClient.invalidateQueries({
           queryKey: trpc.chat.getChatById.queryKey(),
         });
-        setIsResponding(false);
-        setAiResponse("");
       },
       onError: (error) => {
         setIsResponding(false);
-        setAiResponse("");
         toast.error("Error", {
           description: error.message || "Failed to send message",
         });
@@ -139,7 +163,9 @@ const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
                 <Textarea
                   {...field}
                   placeholder={placeholder}
-                  disabled={creatingChat || isPending || isResponding}
+                  disabled={
+                    creatingChat || isPending || isResponding || isStreaming
+                  }
                   onKeyDown={handleKeyDown}
                   className="max-h-96 resize-none border-0 shadow-none dark:bg-transparent focus-visible:border-0 focus-visible:ring-0 p-0"
                 />
@@ -153,10 +179,14 @@ const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
             type="submit"
             size={"icon"}
             disabled={
-              !formMessage?.trim() || creatingChat || isPending || isResponding
+              !formMessage?.trim() ||
+              creatingChat ||
+              isPending ||
+              isResponding ||
+              isStreaming
             }
             className="cursor-pointer">
-            {creatingChat || isPending || isResponding ? (
+            {creatingChat || isPending || isResponding || isStreaming ? (
               <Square />
             ) : (
               <ArrowUp />

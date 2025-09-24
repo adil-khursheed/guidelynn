@@ -8,10 +8,10 @@ const Hero = () => {
   return (
     <section className="px-4 flex-1 mb-3 flex items-center justify-center pt-[60px]">
       <div className="flex-1 flex min-h-[calc(100vh-74px)] flex-col items-center justify-center max-w-[1563px] mx-auto text-center space-y-5 p-3 md:p-5">
-        <h2 className="text-4xl font-bold font-serif text-primary">
+        <h2 className="text-3xl sm:text-4xl font-bold font-serif text-primary">
           AI Career Counseling That Actually Understands You
         </h2>
-        <p className="text-lg font-medium max-w-6xl tracking-wider">
+        <p className="text-base sm:text-lg font-medium max-w-6xl tracking-wider">
           Skip the generic advice. Guidelynn provides intelligent, personalized
           career guidance through natural conversations. Discover your
           strengths, explore opportunities, and plan your next career move with

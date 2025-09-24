@@ -4,7 +4,7 @@ import React from "react";
 
 const ChatSkeleton = () => {
   return (
-    <div className="max-w-3xl w-full mx-auto pt-5 flex flex-col gap-y-10">
+    <div className="max-w-3xl w-full mx-auto pt-12 flex flex-col gap-y-10">
       <div className="flex flex-col items-end gap-y-2">
         {Array.from({ length: 3 }).map((_, i) => (
           <Skeleton

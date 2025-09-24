@@ -19,6 +19,7 @@ import GoogleSignIn from "../../_components/google-signin";
 import { useRouter } from "next/navigation";
 import { login } from "../_actions/login";
 import { Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
 
 const SignInFormSchema = z.object({
   email: z.email({ error: "Invalid email address" }),
@@ -48,6 +49,11 @@ const SignInForm = () => {
       router.replace("/new");
     } catch (err) {
       console.log("Login Err => ", err);
+      if (err instanceof Error) {
+        toast.error(`${err.message}`);
+      } else {
+        toast.error("Login failed");
+      }
     } finally {
       setLoading(false);
     }

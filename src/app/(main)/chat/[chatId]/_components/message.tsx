@@ -4,19 +4,8 @@ import React from "react";
 import Markdown from "react-markdown";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { useChat } from "@/contexts/chat-context";
-import { useAnimatedText } from "@/hooks/use-animated-text";
 
-const Message = ({
-  msg,
-  isLastAIMessage,
-}: {
-  msg: IMessage;
-  isLastAIMessage: boolean;
-}) => {
-  const { aiResponse } = useChat();
-  const animatedText = useAnimatedText(aiResponse);
-
+const Message = ({ msg }: { msg: IMessage }) => {
   return (
     <div
       key={msg.id}

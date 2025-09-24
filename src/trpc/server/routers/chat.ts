@@ -2,7 +2,7 @@ import { createTRPCRouter, protectedProcedure } from "../init";
 import { z } from "zod";
 import OpenAI from "openai";
 import { TRPCError } from "@trpc/server";
-import { addMemory, searchMemories } from "@/lib/mem0";
+import { addMemory, deleteMemories, searchMemories } from "@/lib/mem0";
 
 const openai = new OpenAI({
   apiKey: process.env.OPEN_ROUTER_API_KEY,
@@ -14,26 +14,51 @@ const openai = new OpenAI({
 });
 
 export const chatRouter = createTRPCRouter({
-  getChats: protectedProcedure.query(async ({ ctx }) => {
-    const chats = await ctx.prisma.chat.findMany({
-      where: {
-        userId: ctx.user.id,
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-      include: {
-        messages: {
-          take: 1,
-          orderBy: {
-            createdAt: "desc",
+  getChats: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.date().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input.limit ?? 20;
+      const { cursor } = input;
+
+      const chats = await ctx.prisma.chat.findMany({
+        take: limit,
+        where: {
+          userId: ctx.user.id,
+          ...(cursor && {
+            updatedAt: {
+              lt: cursor,
+            },
+          }),
+        },
+        orderBy: {
+          updatedAt: "desc",
+        },
+        include: {
+          messages: {
+            take: 1,
+            orderBy: {
+              createdAt: "desc",
+            },
           },
         },
-      },
-    });
+      });
 
-    return chats;
-  }),
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (chats.length > limit) {
+        const nextItem = chats.pop();
+        nextCursor = nextItem!.updatedAt;
+      }
+
+      return {
+        chats,
+        nextCursor,
+      };
+    }),
 
   getChatById: protectedProcedure
     .input(
@@ -87,6 +112,63 @@ export const chatRouter = createTRPCRouter({
       return newChat;
     }),
 
+  updateChatTitle: protectedProcedure
+    .input(
+      z.object({
+        chatId: z.uuid(),
+        title: z.string().min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { chatId, title } = input;
+      const chat = await ctx.prisma.chat.findFirst({
+        where: {
+          id: chatId,
+        },
+      });
+
+      if (!chat) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Chat not found",
+        });
+      }
+
+      await ctx.prisma.chat.update({
+        where: {
+          id: chatId,
+        },
+        data: {
+          title,
+        },
+      });
+    }),
+
+  deleteChat: protectedProcedure
+    .input(
+      z.object({
+        chatId: z.uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const chatId = input?.chatId;
+
+      if (!chatId) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "ChatId required",
+        });
+      }
+
+      await ctx.prisma.chat.delete({
+        where: {
+          id: input.chatId,
+        },
+      });
+
+      await deleteMemories(ctx.user.id, chatId);
+    }),
+
   sendNewMessage: protectedProcedure
     .input(
       z.object({
@@ -122,7 +204,7 @@ export const chatRouter = createTRPCRouter({
         },
       });
 
-      const relevantMemories = await searchMemories(userId, message);
+      const relevantMemories = await searchMemories(userId, chatId, message);
 
       const existingMessages = await ctx.prisma.message.findMany({
         where: { chatId },
@@ -182,7 +264,7 @@ export const chatRouter = createTRPCRouter({
         },
       });
 
-      await addMemory(userId, [
+      await addMemory(userId, chatId, [
         {
           role: "user",
           content: message,

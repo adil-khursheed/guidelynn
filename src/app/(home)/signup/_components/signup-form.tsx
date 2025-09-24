@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import GoogleSignIn from "../../_components/google-signin";
 import { signup } from "../_actions/signup";
+import { toast } from "sonner";
 
 const SignInFormSchema = z.object({
   name: z
@@ -53,6 +54,11 @@ const SignUpForm = () => {
       router.replace("/info/user");
     } catch (err) {
       console.log("Signup Err => ", err);
+      if (err instanceof Error) {
+        toast.error(`${err.message}`);
+      } else {
+        toast.error("Login failed");
+      }
     } finally {
       setLoading(false);
     }

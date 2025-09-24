@@ -9,6 +9,8 @@ interface IChatContext {
   setAiResponse: React.Dispatch<React.SetStateAction<string>>;
   isResponding: boolean;
   setIsResponding: React.Dispatch<React.SetStateAction<boolean>>;
+  isStreaming: boolean;
+  setIsStreaming: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ChatContext = createContext<IChatContext>({
@@ -18,12 +20,15 @@ const ChatContext = createContext<IChatContext>({
   setAiResponse: () => {},
   isResponding: false,
   setIsResponding: () => {},
+  isStreaming: false,
+  setIsStreaming: () => {},
 });
 
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [aiResponse, setAiResponse] = useState("");
   const [isResponding, setIsResponding] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
 
   return (
     <ChatContext.Provider
@@ -34,6 +39,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setAiResponse,
         isResponding,
         setIsResponding,
+        isStreaming,
+        setIsStreaming,
       }}>
       {children}
     </ChatContext.Provider>

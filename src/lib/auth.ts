@@ -5,9 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 
 export const auth = betterAuth({
-  advanced: {
-    cookiePrefix: "_guidelynn",
-  },
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
@@ -18,8 +15,10 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      scope: ["email", "profile"],
     },
+  },
+  advanced: {
+    cookiePrefix: "_guidelynn",
   },
   plugins: [nextCookies()],
 });

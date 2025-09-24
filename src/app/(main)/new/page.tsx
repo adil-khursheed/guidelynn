@@ -13,9 +13,9 @@ const Page = async () => {
 
   return (
     <section className="h-full flex items-center justify-center">
-      <div className="max-w-3xl mx-auto w-full">
+      <div className="max-w-3xl mx-auto w-full px-3">
         <div className="w-full text-center mb-10">
-          <h2 className="text-4xl font-semibold font-serif">
+          <h2 className="text-2xl md:text-4xl font-semibold font-serif">
             Hello {user.name.split(" ")[0]}, How are you?
           </h2>
         </div>

@@ -41,7 +41,7 @@ const AppSidebar = async () => {
   const user = session?.user;
 
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(trpc.chat.getChats.queryOptions());
+  void queryClient.prefetchQuery(trpc.chat.getChats.queryOptions({}));
 
   return (
     <Sidebar>

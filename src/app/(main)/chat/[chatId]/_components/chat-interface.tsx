@@ -7,11 +7,21 @@ import { useChat } from "@/contexts/chat-context";
 import { useTRPC } from "@/trpc/client";
 import Message from "./message";
 import { ResponseLoader } from "@/components/ui/response-loader";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
+
+import RenameChat from "@/components/ui/rename-chat";
+import DeleteChat from "@/components/ui/delete-chat";
 
 const ChatInterface = ({ chatId }: { chatId: string }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, setMessages, isResponding } = useChat();
+  const { messages, setMessages, isResponding, isStreaming } = useChat();
 
   const trpc = useTRPC();
 
@@ -22,11 +32,16 @@ const ChatInterface = ({ chatId }: { chatId: string }) => {
   useEffect(() => {
     if (data && data.messages) {
       setMessages((prev) => {
-        const existingIds = new Set(prev.map((m) => m.id));
         const merged = [...prev];
 
         data.messages.forEach((msg) => {
-          if (!existingIds.has(msg.id)) {
+          const existingIndex = merged.findIndex((m) => m.id === msg.id);
+
+          if (existingIndex >= 0) {
+            // Update existing message
+            merged[existingIndex] = msg;
+          } else {
+            // Add new message
             merged.push(msg);
           }
         });
@@ -48,30 +63,41 @@ const ChatInterface = ({ chatId }: { chatId: string }) => {
 
   return (
     <>
+      <div className="bg-background shadow-xs py-3 pl-14 md:pl-3 pr-3">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant={"ghost"}
+              className="h-auto p-0 hover:bg-transparent cursor-pointer max-w-xs">
+              <span className="w-full truncate">{data.title}</span>
+              <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom">
+            <RenameChat chatId={chatId} existingTitle={data.title} />
+
+            <DeleteChat chatId={chatId} />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <div className="flex-1 overflow-y-auto px-3 scroll-smooth">
         <div className="max-w-3xl w-full mx-auto pt-5 pb-10 flex flex-col gap-y-10">
           {messages.length > 0 ? (
             messages.map((msg) => {
-              const isLastAIMessage =
-                msg.role !== "user" &&
-                msg.id === messages.filter((m) => m.role !== "user").at(-1)?.id;
-              return (
-                <Message
-                  key={msg.id}
-                  msg={msg}
-                  isLastAIMessage={isLastAIMessage}
-                />
-              );
+              return <Message key={msg.id} msg={msg} />;
             })
           ) : (
             <div></div>
           )}
 
-          {isResponding && (
-            <div className="px-6">
-              <ResponseLoader text="Thinking..." />
-            </div>
-          )}
+          {isResponding ||
+            (isStreaming && (
+              <div className="px-6">
+                <ResponseLoader
+                  text={isResponding ? "Thinking..." : "Generating..."}
+                />
+              </div>
+            ))}
           <div ref={messagesEndRef} />
         </div>
       </div>

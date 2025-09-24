@@ -7,7 +7,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     <SidebarProvider>
       <AppSidebar />
       <main className="flex-1 relative">
-        <SidebarTrigger className="md:hidden absolute top-4 left-4" />
+        <SidebarTrigger className="md:hidden absolute top-2.5 left-3" />
         {children}
       </main>
     </SidebarProvider>

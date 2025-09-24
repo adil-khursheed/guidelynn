@@ -17,7 +17,7 @@ const Page = async ({ params }: { params: Promise<{ chatId: string }> }) => {
   );
 
   return (
-    <section className="h-screen flex flex-col">
+    <section className="h-dvh flex flex-col">
       <HydrationBoundary state={dehydrate(queryClient)}>
         <Suspense fallback={<ChatSkeleton />}>
           <ChatInterface chatId={chatId} />
