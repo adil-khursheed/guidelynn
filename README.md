@@ -58,9 +58,9 @@ You can access the live, deployed version of the application here:
 
    ```
    # Database (NeonDB)
-   DATABASE_URL="postgresql://username:password@localhost:5432/guidelynn"
+   DATABASE_URL="your-postgresql-db-connection-string"
 
-   # Authentication (NextAuth.js)
+   # Authentication (Better-Auth)
    BETTER_AUTH_URL="http://localhost:3000"
    BETTER_AUTH_SECRET="your-nextauth-secret"
    NEXT_PUBLIC_API_URL="http://localhost:3000"
