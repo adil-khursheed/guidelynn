@@ -3,10 +3,11 @@ import Link from "next/link";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SignUpForm from "./_components/signup-form";
+import SectionContainer from "../_components/section-container";
 
 const Page = () => {
   return (
-    <section className="min-h-screen w-screen flex items-center justify-center pt-[60px] px-3">
+    <SectionContainer>
       <Card className="max-w-lg w-full">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
@@ -27,7 +28,7 @@ const Page = () => {
           </Suspense>
         </CardContent>
       </Card>
-    </section>
+    </SectionContainer>
   );
 };
 

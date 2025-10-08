@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import GoogleSignIn from "../../_components/google-signin";
 import { signup } from "../_actions/signup";
 import { toast } from "sonner";
+import PasswordInput from "../../_components/password-input";
 
 const SignInFormSchema = z.object({
   name: z
@@ -51,6 +52,11 @@ const SignUpForm = () => {
       setLoading(true);
 
       await signup(data);
+      toast.success(
+        `Please verify your email with the link we have sent you on your email ${data.email}`,
+        { duration: 5000 }
+      );
+      form.reset();
       router.replace("/info/user");
     } catch (err) {
       console.log("Signup Err => ", err);
@@ -83,7 +89,7 @@ const SignUpForm = () => {
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="John Doe" />
+                  <Input {...field} placeholder="John Doe" disabled={loading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,7 +103,11 @@ const SignUpForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="johndoe@gmail.com" />
+                  <Input
+                    {...field}
+                    placeholder="johndoe@gmail.com"
+                    disabled={loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -111,7 +121,7 @@ const SignUpForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter a password" />
+                  <PasswordInput {...field} disabled={loading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { login } from "../_actions/login";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
+import PasswordInput from "../../_components/password-input";
 
 const SignInFormSchema = z.object({
   email: z.email({ error: "Invalid email address" }),
@@ -96,11 +97,7 @@ const SignInForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Enter a password"
-                    disabled={loading}
-                  />
+                  <PasswordInput {...field} disabled={loading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -108,7 +105,11 @@ const SignInForm = () => {
           />
 
           <div className="flex items-center justify-end">
-            <Button asChild variant={"link"} className="px-0 py-0 h-auto">
+            <Button
+              type="button"
+              asChild
+              variant={"link"}
+              className="px-0 py-0 h-auto">
               <Link href="/forgot-password">Forgot password?</Link>
             </Button>
           </div>

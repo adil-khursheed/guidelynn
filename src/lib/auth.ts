@@ -3,13 +3,36 @@ import { nextCookies } from "better-auth/next-js";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
+import { sendMail } from "./nodemailer";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+  emailVerification: {
+    sendOnSignIn: true,
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendMail({
+        type: "verify-email",
+        to: user.email,
+        recipientName: user.name,
+        actionUrl: url,
+      });
+    },
+  },
   emailAndPassword: {
     enabled: true,
+    // requireEmailVerification: true,
+    sendResetPassword: async ({ user, url }) => {
+      await sendMail({
+        type: "reset-password",
+        to: user.email,
+        recipientName: user.name,
+        actionUrl: url,
+      });
+    },
   },
   socialProviders: {
     google: {
