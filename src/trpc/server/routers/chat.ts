@@ -232,7 +232,7 @@ export const chatRouter = createTRPCRouter({
       Provide helpful, actionable advice while being supportive and encouraging.`;
 
       const response = await openai.chat.completions.create({
-        model: "deepseek/deepseek-r1-0528:free",
+        model: "openai/gpt-oss-20b:free",
         messages: [
           {
             role: "system",
