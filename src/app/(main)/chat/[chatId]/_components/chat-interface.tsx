@@ -90,14 +90,13 @@ const ChatInterface = ({ chatId }: { chatId: string }) => {
             <div></div>
           )}
 
-          {isResponding ||
-            (isStreaming && (
-              <div className="px-6">
-                <ResponseLoader
-                  text={isResponding ? "Thinking..." : "Generating..."}
-                />
-              </div>
-            ))}
+          {(isResponding || isStreaming) && (
+            <div className="px-6">
+              <ResponseLoader
+                text={isResponding ? "Thinking..." : "Generating..."}
+              />
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </div>
       </div>

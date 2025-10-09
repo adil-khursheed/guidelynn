@@ -84,6 +84,7 @@ const ChatInput = ({ chatId, placeholder = "" }: ChatInputProps) => {
       },
       onError: (error) => {
         setIsResponding(false);
+        setIsStreaming(false);
         toast.error("Error", {
           description: error.message || "Failed to send message",
         });

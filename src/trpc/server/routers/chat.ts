@@ -209,10 +209,12 @@ export const chatRouter = createTRPCRouter({
       const existingMessages = await ctx.prisma.message.findMany({
         where: { chatId },
         orderBy: {
-          createdAt: "asc",
+          createdAt: "desc",
         },
-        take: 10,
+        take: 8,
       });
+
+      const messagesInOrder = existingMessages.reverse();
 
       const systemPrompt = `You are an expert AI career counselor, Guidelynn. Your role is to provide personalized career guidance, help with job search strategies, interview preparation, skill development recommendations, and career planning.
 
@@ -230,13 +232,13 @@ export const chatRouter = createTRPCRouter({
       Provide helpful, actionable advice while being supportive and encouraging.`;
 
       const response = await openai.chat.completions.create({
-        model: "deepseek/deepseek-chat-v3.1:free",
+        model: "deepseek/deepseek-r1-0528:free",
         messages: [
           {
             role: "system",
             content: systemPrompt,
           },
-          ...existingMessages.slice(-8).map((msg) => ({
+          ...messagesInOrder.map((msg) => ({
             role: msg.role as "user" | "assistant",
             content: msg.message,
           })),
