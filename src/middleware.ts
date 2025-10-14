@@ -8,9 +8,14 @@ export async function middleware(req: NextRequest) {
   const isAuthApiRoute = pathname.startsWith("/api/auth/");
 
   const isPublicPath =
-    ["/", "/login", "/signup", "/forgot-password", "/reset-password"].includes(
-      pathname
-    ) || isAuthApiRoute;
+    [
+      "/",
+      "/login",
+      "/signup",
+      "/forgot-password",
+      "/reset-password",
+      "/api/send-mail",
+    ].includes(pathname) || isAuthApiRoute;
 
   const sessionCookie = getSessionCookie(req, {
     cookiePrefix: "_guidelynn",

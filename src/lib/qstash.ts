@@ -11,7 +11,7 @@ export const sendMailInQueue = async (options: {
   type: TemplateType;
 }) => {
   await qstashClient.publishJSON({
-    url: `https://right-mayfly-vocal.ngrok-free.app/api/send-mail`,
+    url: `${process.env.NEXT_PUBLIC_EXPOSED_URL}/api/send-mail`,
     body: options,
   });
 };

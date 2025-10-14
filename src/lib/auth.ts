@@ -3,7 +3,7 @@ import { nextCookies } from "better-auth/next-js";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
-import { sendMail } from "./nodemailer";
+import { sendMailInQueue } from "./qstash";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -14,7 +14,7 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      await sendMail({
+      await sendMailInQueue({
         type: "verify-email",
         to: user.email,
         recipientName: user.name,
@@ -26,7 +26,7 @@ export const auth = betterAuth({
     enabled: true,
     // requireEmailVerification: true,
     sendResetPassword: async ({ user, url }) => {
-      await sendMail({
+      await sendMailInQueue({
         type: "reset-password",
         to: user.email,
         recipientName: user.name,
