@@ -1,0 +1,39 @@
+
+> guidelynn@0.1.0 build
+> prisma generate && next build --turbopack
+
+Prisma schema loaded from prisma/schema.prisma
+
+✔ Generated Prisma Client (v6.16.2) to ./src/generated/prisma in 83ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Interested in query caching in just a few lines of code? Try Accelerate today! https://pris.ly/tip-3-accelerate
+
+   ▲ Next.js 15.5.7 (Turbopack)
+
+   Creating an optimized production build ...
+ ✓ Finished writing to disk in 38ms
+ ✓ Compiled successfully in 27.1s
+   Linting and checking validity of types ...
+
+./src/components/ui/multi-select.tsx
+338:7  Warning: 'asChild' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+662:7  Warning: 'hasMatchingOptions' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+[Upstash QStash] client token is not set. Either pass a token or set QSTASH_TOKEN env variable.
+2025-12-08T16:38:44.542Z ERROR [Better Auth]: You are using the default secret. Please set `BETTER_AUTH_SECRET` in your environment variables or pass `secret` in your auth config.
+2025-12-08T16:38:44.545Z WARN [Better Auth]: Social provider google is missing clientId or clientSecret
+Error: Mem0 API key is required
+    at instantiateModule (.next/server/chunks/[turbopack]_runtime.js:702:9)
+    at instantiateRuntimeModule (.next/server/chunks/[turbopack]_runtime.js:730:12)
+    at getOrInstantiateRuntimeModule (.next/server/chunks/[turbopack]_runtime.js:743:12)
+    at Object.m (.next/server/chunks/[turbopack]_runtime.js:752:18)
+    at Object.<anonymous> (.next/server/app/api/trpc/[trpc]/route.js:12:3)
+
+> Build error occurred
+[Error: Failed to collect page data for /api/trpc/[trpc]] {
+  type: 'Error'
+}
