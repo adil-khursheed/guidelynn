@@ -164,7 +164,28 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    scrollbar-color: var(--input) transparent;
+    scrollbar-width: thin;
+  }
   body {
     @apply bg-background text-foreground;
+    caret-color: var(--primary);
+  }
+  ::selection {
+    background-color: color-mix(in oklch, var(--primary) 22%, transparent);
+    color: var(--foreground);
+  }
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
