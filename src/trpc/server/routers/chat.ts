@@ -19,7 +19,7 @@ export const chatRouter = createTRPCRouter({
       z.object({
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.date().nullish(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 20;
@@ -64,7 +64,7 @@ export const chatRouter = createTRPCRouter({
     .input(
       z.object({
         chatId: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { chatId } = input;
@@ -96,7 +96,7 @@ export const chatRouter = createTRPCRouter({
       z.object({
         title: z.string().min(1),
         id: z.uuidv4(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.user.id;
@@ -117,7 +117,7 @@ export const chatRouter = createTRPCRouter({
       z.object({
         chatId: z.uuid(),
         title: z.string().min(1),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { chatId, title } = input;
@@ -148,7 +148,7 @@ export const chatRouter = createTRPCRouter({
     .input(
       z.object({
         chatId: z.uuid(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const chatId = input?.chatId;
@@ -175,7 +175,7 @@ export const chatRouter = createTRPCRouter({
         chatId: z.uuid(),
         message: z.string().min(1),
         messageId: z.uuidv4(),
-      })
+      }),
     )
     .mutation(async function* ({ ctx, input }) {
       const userId = ctx.user.id;
@@ -232,7 +232,7 @@ export const chatRouter = createTRPCRouter({
       Provide helpful, actionable advice while being supportive and encouraging.`;
 
       const response = await openai.chat.completions.create({
-        model: "openai/gpt-oss-20b:free",
+        model: "nvidia/nemotron-3.5-lightning:free",
         messages: [
           {
             role: "system",
