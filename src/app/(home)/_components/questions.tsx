@@ -40,13 +40,18 @@ export const faqItems = [
 const Questions = () => {
   return (
     <section id="questions" className="scroll-mt-20 border-t border-border">
-      <div className="mx-auto max-w-[1100px] px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+      <div className="mx-auto max-w-275 px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] lg:gap-20">
           <div>
-            <h2 className="max-w-[10ch] font-serif text-4xl leading-[1.05] tracking-[-0.025em] sm:text-5xl">
+            <h2 className="max-w-[10ch] font-serif text-4xl leading-[1.05] tracking-tight sm:text-5xl">
               Questions worth asking.
             </h2>
-            <p className={cn("mt-5 max-w-[38ch] text-base leading-7", subtleText)}>
+            <p
+              className={cn(
+                "mt-5 max-w-[38ch] text-base leading-7",
+                subtleText,
+              )}
+            >
               If yours is not here, bring it to a session. That is what the hour
               is for.
             </p>
@@ -56,7 +61,8 @@ const Questions = () => {
             {faqItems.map((item) => (
               <details
                 key={item.question}
-                className="group border-b border-border py-5">
+                className="group border-b border-border py-5"
+              >
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-6 rounded-sm text-sm font-medium marker:hidden focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none [&::-webkit-details-marker]:hidden">
                   {item.question}
                   <ChevronDown className="mt-0.5 size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180" />
@@ -64,8 +70,9 @@ const Questions = () => {
                 <p
                   className={cn(
                     "mt-3 max-w-[62ch] pr-8 text-sm leading-6",
-                    subtleText
-                  )}>
+                    subtleText,
+                  )}
+                >
                   {item.answer}
                 </p>
               </details>
