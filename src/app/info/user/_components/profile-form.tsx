@@ -294,7 +294,12 @@ const ProfileForm = ({
           ? "Your file is updated."
           : "Your file is ready. Let's start the conversation.",
       );
-      router.replace("/new");
+
+      if (isEditing) {
+        router.refresh();
+      } else {
+        router.replace("/new");
+      }
     } catch {
       toast.error("We couldn't save your file. Try again in a moment.");
     }
@@ -334,7 +339,7 @@ const ProfileForm = ({
             <div className="flex items-center gap-2.5">
               <span className="size-1.5 rounded-full bg-primary" />
               <span className="font-semibold text-foreground">
-                Profile intake
+                {isEditing ? "Career profile" : "Profile intake"}
               </span>
               <span className={subtleText}>
                 {isEditing ? "Update" : "First visit"}
@@ -355,8 +360,9 @@ const ProfileForm = ({
                 subtleText,
               )}
             >
-              Three short questions so the next conversation starts from where
-              you actually are — not a blank page.
+              {isEditing
+                ? "Keep these notes current so every conversation starts from where you actually are."
+                : "Three short questions so the next conversation starts from where you actually are — not a blank page."}
             </p>
           </div>
 
@@ -724,7 +730,9 @@ const ProfileForm = ({
               <div className="flex flex-col-reverse gap-3 border-t border-border bg-muted/30 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
                 <p className={cn("text-xs leading-5", subtleText)}>
                   {isLastStep
-                    ? "This becomes the starting point for every conversation."
+                    ? isEditing
+                      ? "These notes carry into your next conversation."
+                      : "This becomes the starting point for every conversation."
                     : "Takes about two minutes. Change any of this later."}
                 </p>
                 <div className="flex items-center justify-center gap-2 sm:justify-end">

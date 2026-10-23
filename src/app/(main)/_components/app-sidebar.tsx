@@ -6,7 +6,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { getSession } from "@/lib/auth";
 
-import { ChevronUp, User2Icon } from "lucide-react";
+import { ChevronUp, User2Icon, UserRoundIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -23,6 +23,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ThemeToggle from "@/components/ui/theme-toggle";
@@ -110,6 +111,15 @@ const AppSidebar = async () => {
                       )}
                     </span>
                   </span>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem asChild>
+                  <Link href="/info/user" className="cursor-pointer">
+                    <UserRoundIcon aria-hidden="true" />
+                    <span>Profile</span>
+                  </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem>

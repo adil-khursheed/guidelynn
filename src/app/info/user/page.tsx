@@ -3,6 +3,8 @@ import React, { Suspense } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { ArrowLeft } from "lucide-react";
+
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import ThemeToggle from "@/components/ui/theme-toggle";
@@ -45,11 +47,22 @@ const Page = async () => {
 
       <header className="sticky top-0 z-40 border-b border-border bg-background">
         <div className="mx-auto flex h-16 w-full max-w-265 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/"
-            className="rounded-sm font-serif text-xl tracking-[-0.02em] text-primary focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50">
-            Guidelynn
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              className="rounded-sm font-serif text-xl tracking-[-0.02em] text-primary focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50">
+              Guidelynn
+            </Link>
+
+            {profile ? (
+              <Link
+                href="/new"
+                className="inline-flex items-center gap-1.5 rounded-sm text-xs font-medium text-secondary-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:text-muted-foreground">
+                <ArrowLeft className="size-3.5" aria-hidden="true" />
+                Back to chats
+              </Link>
+            ) : null}
+          </div>
 
           <div className="flex items-center gap-2">
             <span className="hidden text-[10px] uppercase tracking-[0.09em] text-secondary-foreground dark:text-muted-foreground sm:inline">

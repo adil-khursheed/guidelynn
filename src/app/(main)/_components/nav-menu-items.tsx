@@ -3,7 +3,11 @@
 import React from "react";
 import Link from "next/link";
 
-import { MessagesSquareIcon, PlusCircleIcon } from "lucide-react";
+import {
+  MessagesSquareIcon,
+  PlusCircleIcon,
+  UserRoundIcon,
+} from "lucide-react";
 
 import {
   SidebarMenu,
@@ -24,6 +28,11 @@ const items = [
     title: "Chats",
     url: "/recents",
     icon: MessagesSquareIcon,
+  },
+  {
+    title: "Profile",
+    url: "/info/user",
+    icon: UserRoundIcon,
   },
 ];
 
