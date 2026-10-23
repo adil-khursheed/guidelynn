@@ -23,7 +23,7 @@ import { signup } from "../_actions/signup";
 import { toast } from "sonner";
 import PasswordInput from "../../_components/password-input";
 
-const SignInFormSchema = z.object({
+const SignUpFormSchema = z.object({
   name: z
     .string({ error: "Name is required" })
     .min(1, { error: "Name is required" }),
@@ -38,8 +38,8 @@ const SignUpForm = () => {
 
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof SignInFormSchema>>({
-    resolver: zodResolver(SignInFormSchema),
+  const form = useForm<z.infer<typeof SignUpFormSchema>>({
+    resolver: zodResolver(SignUpFormSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -47,23 +47,22 @@ const SignUpForm = () => {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof SignInFormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof SignUpFormSchema>) => {
     try {
       setLoading(true);
 
       await signup(data);
       toast.success(
-        `Please verify your email with the link we have sent you on your email ${data.email}`,
+        `We sent a verification link to ${data.email}. Verify it to finish setting up your account.`,
         { duration: 5000 }
       );
       form.reset();
       router.replace("/info/user");
     } catch (err) {
-      console.log("Signup Err => ", err);
       if (err instanceof Error) {
-        toast.error(`${err.message}`);
+        toast.error(err.message);
       } else {
-        toast.error("Login failed");
+        toast.error("Couldn't create your account. Try again.");
       }
     } finally {
       setLoading(false);
@@ -71,25 +70,36 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <GoogleSignIn />
 
-      <div className="flex items-center justify-between gap-4">
-        <div className="w-full h-px bg-input" />
-        <span className="text-sm text-muted-foreground">OR</span>
-        <div className="w-full h-px bg-input" />
+      <div className="flex items-center gap-4">
+        <div className="h-px w-full bg-border" />
+        <span className="text-[11px] font-medium uppercase tracking-[0.09em] text-secondary-foreground dark:text-muted-foreground">
+          or
+        </span>
+        <div className="h-px w-full bg-border" />
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          noValidate
+          className="space-y-4">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel>Full name</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="John Doe" disabled={loading} />
+                  <Input
+                    {...field}
+                    autoComplete="name"
+                    placeholder="John Doe"
+                    disabled={loading}
+                    required
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -105,8 +115,14 @@ const SignUpForm = () => {
                 <FormControl>
                   <Input
                     {...field}
+                    type="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    autoCapitalize="none"
+                    spellCheck={false}
                     placeholder="johndoe@gmail.com"
                     disabled={loading}
+                    required
                   />
                 </FormControl>
                 <FormMessage />
@@ -121,7 +137,12 @@ const SignUpForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <PasswordInput {...field} disabled={loading} />
+                  <PasswordInput
+                    {...field}
+                    autoComplete="new-password"
+                    disabled={loading}
+                    required
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -130,9 +151,17 @@ const SignUpForm = () => {
 
           <Button
             disabled={loading}
+            aria-busy={loading}
             type="submit"
             className="w-full cursor-pointer">
-            {loading ? <Loader2Icon className="animate-spin" /> : "Sign Up"}
+            {loading ? (
+              <>
+                <Loader2Icon className="animate-spin" aria-hidden="true" />
+                Creating account
+              </>
+            ) : (
+              "Create account"
+            )}
           </Button>
         </form>
       </Form>

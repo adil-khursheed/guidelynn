@@ -1,40 +1,32 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import Link from "next/link";
+import type { Metadata } from "next";
 import React, { Suspense } from "react";
+
+import AuthCard from "../_components/auth-card";
+import { AuthLink } from "../_components/auth-link";
 import SignInForm from "./_components/signin-form";
-import SectionContainer from "../_components/section-container";
+
+export const metadata: Metadata = {
+  title: "Sign in — Guidelynn",
+  description: "Sign in to continue your career conversations on Guidelynn.",
+};
 
 const Page = () => {
   return (
-    <SectionContainer>
-      <Card className="max-w-lg w-full">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-          <CardDescription className="text-lg">
-            Enter your credentials to login to your account.
-          </CardDescription>
-
-          <p className="text-sm text-neutral-500">
-            {"Don't have an account?"}{" "}
-            <Link href="/signup" className="text-primary underline">
-              Sign Up
-            </Link>
-          </p>
-        </CardHeader>
-
-        <CardContent>
-          <Suspense fallback={null}>
-            <SignInForm />
-          </Suspense>
-        </CardContent>
-      </Card>
-    </SectionContainer>
+    <AuthCard
+      metaLeft="Account"
+      metaRight="Sign in"
+      title="Welcome back"
+      description="Enter your email and password to continue."
+      footer={
+        <>
+          {"Don't have an account? "}
+          <AuthLink href="/signup">Sign up</AuthLink>
+        </>
+      }>
+      <Suspense fallback={null}>
+        <SignInForm />
+      </Suspense>
+    </AuthCard>
   );
 };
 

@@ -10,8 +10,10 @@ const SectionContainer = ({
 }) => {
   return (
     <section
+      id="content"
+      tabIndex={-1}
       className={cn(
-        "min-h-dvh w-screen flex items-center justify-center pt-[60px] px-3",
+        "flex min-h-[calc(100dvh-4rem)] w-full items-center justify-center px-4 py-10 focus:outline-none sm:px-6 sm:py-14",
         className
       )}>
       {children}

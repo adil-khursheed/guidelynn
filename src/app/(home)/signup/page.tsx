@@ -1,34 +1,33 @@
+import type { Metadata } from "next";
 import React, { Suspense } from "react";
-import Link from "next/link";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AuthCard from "../_components/auth-card";
+import { AuthLink } from "../_components/auth-link";
 import SignUpForm from "./_components/signup-form";
-import SectionContainer from "../_components/section-container";
+
+export const metadata: Metadata = {
+  title: "Create an account — Guidelynn",
+  description:
+    "Create your Guidelynn account to keep your profile and career conversations in one place.",
+};
 
 const Page = () => {
   return (
-    <SectionContainer>
-      <Card className="max-w-lg w-full">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">
-            Create a new account
-          </CardTitle>
-
-          <p className="text-sm text-neutral-500">
-            {"Already have an account?"}{" "}
-            <Link href="/login" className="text-primary underline">
-              Sign In
-            </Link>
-          </p>
-        </CardHeader>
-
-        <CardContent>
-          <Suspense fallback={null}>
-            <SignUpForm />
-          </Suspense>
-        </CardContent>
-      </Card>
-    </SectionContainer>
+    <AuthCard
+      metaLeft="Account"
+      metaRight="Create account"
+      title="Create a new account"
+      description="One account keeps your profile and every conversation in one place."
+      footer={
+        <>
+          {"Already have an account? "}
+          <AuthLink href="/login">Sign in</AuthLink>
+        </>
+      }>
+      <Suspense fallback={null}>
+        <SignUpForm />
+      </Suspense>
+    </AuthCard>
   );
 };
 

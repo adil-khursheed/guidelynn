@@ -21,6 +21,8 @@ import { login } from "../_actions/login";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 import PasswordInput from "../../_components/password-input";
+import { authLinkClass } from "../../_components/auth-link";
+import { cn } from "@/lib/utils";
 
 const SignInFormSchema = z.object({
   email: z.email({ error: "Invalid email address" }),
@@ -49,11 +51,10 @@ const SignInForm = () => {
       await login(data);
       router.replace("/new");
     } catch (err) {
-      console.log("Login Err => ", err);
       if (err instanceof Error) {
-        toast.error(`${err.message}`);
+        toast.error(err.message);
       } else {
-        toast.error("Login failed");
+        toast.error("Couldn't sign you in. Try again.");
       }
     } finally {
       setLoading(false);
@@ -61,17 +62,22 @@ const SignInForm = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <GoogleSignIn />
 
-      <div className="flex items-center justify-between gap-4">
-        <div className="w-full h-px bg-input" />
-        <span className="text-sm text-muted-foreground">OR</span>
-        <div className="w-full h-px bg-input" />
+      <div className="flex items-center gap-4">
+        <div className="h-px w-full bg-border" />
+        <span className="text-[11px] font-medium uppercase tracking-[0.09em] text-secondary-foreground dark:text-muted-foreground">
+          or
+        </span>
+        <div className="h-px w-full bg-border" />
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          noValidate
+          className="space-y-4">
           <FormField
             control={form.control}
             name="email"
@@ -81,8 +87,14 @@ const SignInForm = () => {
                 <FormControl>
                   <Input
                     {...field}
+                    type="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    autoCapitalize="none"
+                    spellCheck={false}
                     placeholder="johndoe@gmail.com"
                     disabled={loading}
+                    required
                   />
                 </FormControl>
                 <FormMessage />
@@ -95,30 +107,40 @@ const SignInForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <div className="flex items-center justify-between gap-4">
+                  <FormLabel>Password</FormLabel>
+                  <Link
+                    href="/forgot-password"
+                    className={cn(authLinkClass, "text-xs")}>
+                    Forgot password?
+                  </Link>
+                </div>
                 <FormControl>
-                  <PasswordInput {...field} disabled={loading} />
+                  <PasswordInput
+                    {...field}
+                    autoComplete="current-password"
+                    disabled={loading}
+                    required
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <div className="flex items-center justify-end">
-            <Button
-              type="button"
-              asChild
-              variant={"link"}
-              className="px-0 py-0 h-auto">
-              <Link href="/forgot-password">Forgot password?</Link>
-            </Button>
-          </div>
-
           <Button
             disabled={loading}
+            aria-busy={loading}
             type="submit"
             className="w-full cursor-pointer">
-            {loading ? <Loader2Icon className="animate-spin" /> : "Sign In"}
+            {loading ? (
+              <>
+                <Loader2Icon className="animate-spin" aria-hidden="true" />
+                Signing in
+              </>
+            ) : (
+              "Sign in"
+            )}
           </Button>
         </form>
       </Form>

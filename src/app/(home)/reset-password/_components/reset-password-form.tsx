@@ -12,17 +12,29 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Link from "next/link";
 import PasswordInput from "../../_components/password-input";
 import { Button } from "@/components/ui/button";
-import { Loader2Icon } from "lucide-react";
+import { AlertCircleIcon, Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { authLinkClass } from "../../_components/auth-link";
+import { cn } from "@/lib/utils";
 
-const ResetPasswordFormSchema = z.object({
-  "new-password": z.string().min(8),
-  "confirm-password": z.string().min(8),
-});
+const ResetPasswordFormSchema = z
+  .object({
+    "new-password": z
+      .string()
+      .min(8, { error: "Password must be at least 8 characters long" }),
+    "confirm-password": z
+      .string()
+      .min(8, { error: "Confirm your password" }),
+  })
+  .refine((data) => data["new-password"] === data["confirm-password"], {
+    error: "Passwords do not match",
+    path: ["confirm-password"],
+  });
 
 const ResetPasswordForm = ({ token }: { token: string }) => {
   const [loading, setLoading] = useState(false);
@@ -43,11 +55,6 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
       return;
     }
 
-    if (data["new-password"] !== data["confirm-password"]) {
-      toast.warning("Passwords should be same.");
-      return;
-    }
-
     try {
       setLoading(true);
       const { error } = await authClient.resetPassword({
@@ -63,25 +70,54 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
       toast.success("Password changed successfully.");
       form.reset();
       router.replace("/login");
-    } catch (error) {
-      console.log("Reset password failed: ", error);
-      toast.error("Reset password failed.");
+    } catch {
+      toast.error("Couldn't reset your password. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
+  const isDisabled = loading || !token;
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        noValidate
+        className="space-y-4">
+        {!token ? (
+          <div
+            role="alert"
+            className="flex gap-2.5 rounded-md border border-border bg-muted/40 px-3 py-2.5 text-sm leading-5">
+            <AlertCircleIcon
+              className="mt-0.5 size-4 shrink-0 text-primary"
+              aria-hidden="true"
+            />
+            <p>
+              This reset link is missing or invalid.{" "}
+              <Link
+                href="/forgot-password"
+                className={cn(authLinkClass, "underline")}>
+                Request a new link
+              </Link>
+              .
+            </p>
+          </div>
+        ) : null}
+
         <FormField
           control={form.control}
           name="new-password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>New Password</FormLabel>
+              <FormLabel>New password</FormLabel>
               <FormControl>
-                <PasswordInput {...field} />
+                <PasswordInput
+                  {...field}
+                  autoComplete="new-password"
+                  disabled={isDisabled}
+                  required
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -93,9 +129,14 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
           name="confirm-password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>Confirm password</FormLabel>
               <FormControl>
-                <PasswordInput {...field} />
+                <PasswordInput
+                  {...field}
+                  autoComplete="new-password"
+                  disabled={isDisabled}
+                  required
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -103,13 +144,17 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
         />
 
         <Button
-          disabled={loading}
+          disabled={isDisabled}
+          aria-busy={loading}
           type="submit"
           className="w-full cursor-pointer">
           {loading ? (
-            <Loader2Icon className="animate-spin" />
+            <>
+              <Loader2Icon className="animate-spin" aria-hidden="true" />
+              Resetting password
+            </>
           ) : (
-            "Reset Password"
+            "Reset password"
           )}
         </Button>
       </form>

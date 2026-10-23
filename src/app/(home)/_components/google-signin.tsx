@@ -30,10 +30,13 @@ const GoogleSignIn = () => {
       onClick={signin}
       variant="outline"
       disabled={loading}
-      className="w-full border-input cursor-pointer">
+      aria-busy={loading}
+      className="w-full cursor-pointer border-input">
       <Google />
-      Sign in with Google
-      {loading && <Loader2Icon className="animate-spin text-primary" />}
+      Continue with Google
+      {loading && (
+        <Loader2Icon className="animate-spin text-primary" aria-hidden="true" />
+      )}
     </Button>
   );
 };

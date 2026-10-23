@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +18,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, MailCheckIcon } from "lucide-react";
 
 const ForgotPasswordFormSchema = z.object({
   email: z.email({ error: "Invalid email address" }),
@@ -27,8 +26,7 @@ const ForgotPasswordFormSchema = z.object({
 
 const ForgotPasswordForm = () => {
   const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
+  const [sentTo, setSentTo] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof ForgotPasswordFormSchema>>({
     resolver: zodResolver(ForgotPasswordFormSchema),
@@ -51,19 +49,49 @@ const ForgotPasswordForm = () => {
         return;
       }
 
-      toast.success(`Password reset link has been sent to ${data.email}`);
+      setSentTo(data.email);
+      toast.success("Check your email for the reset link.");
       form.reset();
-      router.replace("/login");
-    } catch (error) {
-      console.log("Request reset password failed: ", error);
-      toast.error("Request reset password failed.");
+    } catch {
+      toast.error("Couldn't send the reset link. Try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  if (sentTo) {
+    return (
+      <div className="space-y-4" role="status">
+        <div className="flex gap-2.5 rounded-md border border-border bg-muted/40 px-3.5 py-3 text-sm leading-6">
+          <MailCheckIcon
+            className="mt-0.5 size-4 shrink-0 text-primary"
+            aria-hidden="true"
+          />
+          <p>
+            If an account exists for{" "}
+            <span className="font-medium text-foreground">{sentTo}</span>, a
+            reset link is on its way. It may take a minute to arrive, so check
+            your spam folder too.
+          </p>
+        </div>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full cursor-pointer"
+          onClick={() => setSentTo(null)}>
+          Use a different email
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        noValidate
+        className="space-y-4">
         <FormField
           control={form.control}
           name="email"
@@ -73,8 +101,14 @@ const ForgotPasswordForm = () => {
               <FormControl>
                 <Input
                   {...field}
+                  type="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  autoCapitalize="none"
+                  spellCheck={false}
                   placeholder="johndoe@gmail.com"
                   disabled={loading}
+                  required
                 />
               </FormControl>
               <FormMessage />
@@ -84,9 +118,17 @@ const ForgotPasswordForm = () => {
 
         <Button
           disabled={loading}
+          aria-busy={loading}
           type="submit"
           className="w-full cursor-pointer">
-          {loading ? <Loader2Icon className="animate-spin" /> : "Send Request"}
+          {loading ? (
+            <>
+              <Loader2Icon className="animate-spin" aria-hidden="true" />
+              Sending reset link
+            </>
+          ) : (
+            "Send reset link"
+          )}
         </Button>
       </form>
     </Form>

@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { PrimaryCta } from "./cta";
 
 const navItems = [
-  { href: "#method", label: "The method" },
-  { href: "#memory", label: "Memory" },
-  { href: "#questions", label: "Questions" },
+  { href: "/#method", label: "The method" },
+  { href: "/#memory", label: "Memory" },
+  { href: "/#questions", label: "Questions" },
 ];
 
 const Header = () => {
