@@ -337,6 +337,9 @@ Soft, even geometry. The base radius is 8px (`--radius`); the working scale is 4
 - **Type:** Geist h1 at 24px/600, a 15px Warm Graphite Muted description, and no serif inside the form.
 - **Footer:** quiet account-switch or return link in Terracotta Deep, separated by a 1px warm border.
 
+### Signature: Profile Intake
+A three-step onboarding card at 576px beside a 320px live-preview column. The card opens with a 44px meta rail ("Profile intake", current step), a serif "Hello, {first name}." greeting, and a 15px muted promise, then a three-column step rail whose terracotta hairline tracks progress. Steps swap with a 220ms lift and focus their H2. Make the fields feel like play rather than paperwork: quick-pick chips for stage and industry, a −/+ stepper for years, and a chip picker that accepts suggestions or free text. The footer sits on `muted/30` with Back ghosted and the deep-terracotta primary on the right. The preview uses the same 44px rail, a monogram, label/value rows, a completion bar, and a rotated "Ready" stamp when all seven required answers are present; it sticks at `top-24` on desktop and follows the form on mobile.
+
 ### Inputs / Fields
 - **Style:** 36px tall, 1px Input Line border, transparent ground (a 30% Input tint in dark mode), 6px radius, 12px horizontal padding, 14px text at md and up.
 - **Focus:** border shifts to the ring color with a 3px ring at 50% opacity.
