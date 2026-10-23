@@ -209,7 +209,7 @@ Guidelynn is a career counselor's study at dusk: a warm, low-lit room where a st
 
 The density is conversational, not corporate. Chat and history columns cap at 768px, forms sit in one focused card, and the marketing surface is organized as a single consultation sheet rather than a stack of feature cards. Aoboshi One gives the brand a human, slightly bookish voice; Geist keeps controls and long-form guidance plain and legible. One full-bleed ink interval in the marketing page ("Memory") breaks the paper run, the way an evening falls across a study.
 
-Depth is soft and ambient. Warm 1px borders do most of the structural work, and low-opacity shadows lift cards, popovers, and the composer just enough to separate them from the ground. Motion is restrained — a single 500ms entrance on the hero sheet, 150–200ms state transitions, and a gentle per-character thinking indicator — never decorative display.
+Depth is soft and ambient. Warm 1px borders do most of the structural work, and low-opacity shadows lift cards, popovers, and the composer just enough to separate them from the ground. Motion is restrained and legible: 220–550ms entrances, 150–220ms state transitions, a gentle per-character thinking indicator, and one slow illustration loop (dotted route, pulse points, and a 2.5px desk float) on entry and empty states. That illustration loop is the only continuous motion in the product, and every motion path is disabled under `prefers-reduced-motion`.
 
 **Key Characteristics:**
 - Warm paper / graphite ground with one terracotta signal.
@@ -220,6 +220,7 @@ Depth is soft and ambient. Warm 1px borders do most of the structural work, and 
 - A sticky 64px paper header over a ruled "session sheet" on marketing.
 - One full-bleed Ink interval (Memory) inside an otherwise light page.
 - Light and dark treated as one world: paper at day, dusk at night.
+- One isometric study scene per entry or empty state; quiet route-line drift, never spectacle.
 
 ## Colors
 
@@ -358,13 +359,13 @@ The marketing page's spine. A 1328px bordered sheet with a 12px outer radius, a 
 A full-bleed Ink interval with Warm Paper text and translucent paper borders (20% strokes, 5% fills). Two sample session cards ("First session" / "Two weeks later") are joined by a downward arrow and a "Context carried forward" note. The band is flat, has no outer shadow, and is the only inverted surface on marketing.
 
 ### Signature: Chat Composer
-A single 16px-radius bordered surface holding an auto-growing textarea and a 36px icon submit button, seated in the 768px column. Its ground is transparent (30% Input tint in dark), so it sits on the page rather than inside a card. It is the calmest, most spacious control in the product and the primary point of return.
+A single 16px-radius bordered surface holding an auto-growing textarea and a 36px icon submit button, seated in the 768px column. Its ground is transparent (30% Input tint in dark), so it sits on the page rather than inside a card. Focus adds a terracotta-tinted ring to the whole surface. On `/new`, three quiet starter prompts sit under the composer and fill the field when chosen; the same composer uses "Ask your first question..." on an empty thread. It is the calmest, most spacious control in the product and the primary point of return.
 
 ### Signature: Conversation Thread
-User turns are 12px bordered cards (24px horizontal, 16px vertical padding) aligned right; assistant turns are plain Markdown on the ground, aligned left, with a 24px horizontal inset and 40px between messages. The thinking state is a per-character pulse in bold sans: 500ms, 50ms stagger per character, repeating every 2 seconds.
+User turns are 12px bordered cards capped at 85% width (20px horizontal, 14px vertical padding) aligned right; assistant turns are plain Markdown on the ground, aligned left, with a 24px horizontal inset and 40px between messages. Messages arrive with a 400ms fade-and-lift, staggered by 30ms up to 180ms. Assistant replies carry a quiet copy control below the text: icon only on mobile, icon plus label on hover at sm and up. The thread pins to the latest turn only when the reader is already near the bottom; scrolling back reveals a floating "Latest" pill instead of yanking the viewport. The thinking state is a per-character pulse in bold sans: 500ms, 50ms stagger per character, repeating every 2 seconds.
 
 ### Signature: Study Illustration
-One flat isometric drawing may anchor an otherwise text-led section, as the open notebook and dotted route do in "A counselor, not an oracle." Build it from accent, card, popover, border, and primary tokens with 1–2px warm outlines; no gradients, no stock icons, no decorative animation. It is `aria-hidden` because the surrounding copy carries the meaning.
+Two flat isometric scenes anchor text-led moments. **StudyScene** is the open notebook with a dotted terracotta route and a small flag; it appears on `/new` and an empty conversation. **ArchiveScene** is a stack of paper cards with one terracotta tab; it appears on an empty recents page. Build both from accent, card, popover, border, and primary tokens with 1–2px warm outlines; no gradients and no stock icons. The dotted route drifts slowly (2.8s per cycle), the desk floats 2.5px on a 7s loop, and hover lifts the whole scene 2px; all ambient and hover motion drops out under reduced-motion. Both are `aria-hidden` because the surrounding copy carries the meaning.
 
 ## Do's and Don'ts
 
@@ -377,6 +378,7 @@ One flat isometric drawing may anchor an otherwise text-led section, as the open
 - **Do** use a 1px warm border plus shadow-xs or shadow-sm before adding depth.
 - **Do** give the composer 16px radius and the rest of the controls 6px.
 - **Do** keep the Memory section full-bleed Ink with paper text, and use dashed hairlines for the session-sheet time rail.
+- **Do** let the study scene carry one slow route-line loop on entry and empty states, and gate every motion path behind reduced-motion.
 
 ### Don't:
 - **Don't** introduce cold grays, blues, or a second saturated accent; the unused chart tokens are not license for one.
@@ -385,4 +387,4 @@ One flat isometric drawing may anchor an otherwise text-led section, as the open
 - **Don't** raise shadows beyond the soft, low-opacity scale or stack them on the Ink band.
 - **Don't** exceed 12px radius on standard cards and controls (the composer is the exception).
 - **Don't** put the Memory band inside a card or follow it immediately with another dark band.
-- **Don't** add decorative motion; motion is for state, the hero entrance, and the thinking indicator.
+- **Don't** run more than one ambient loop on a screen, spin or bounce an illustration for attention, or animate without honoring `prefers-reduced-motion`; motion is for arrival, state, wayfinding, and one quiet loop in the study scenes.

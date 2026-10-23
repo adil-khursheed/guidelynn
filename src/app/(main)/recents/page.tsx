@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 import Chats from "./_components/chats";
 import ChatsLoader from "./_components/chats-loader";
+import { Reveal } from "../_components/reveal";
 
 export const dynamic = "force-dynamic";
 
@@ -27,17 +28,24 @@ const Page = async () => {
     )
   );
   return (
-    <section className="h-dvh flex flex-col">
-      <div className="max-w-3xl w-full mx-auto px-3 py-4 flex items-center justify-between">
-        <h3 className="text-xl sm:text-2xl font-semibold">Your chat history</h3>
+    <section className="flex h-dvh flex-col">
+      <Reveal className="mx-auto flex w-full max-w-3xl items-end justify-between gap-4 py-4 pl-14 pr-3 md:px-3">
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold sm:text-2xl">
+            Your chat history
+          </h1>
+          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+            Every session keeps its context. Pick up where you left off.
+          </p>
+        </div>
 
-        <Button asChild>
+        <Button asChild className="shrink-0">
           <Link href={"/new"}>
             <PlusIcon />
             <span>New Chat</span>
           </Link>
         </Button>
-      </div>
+      </Reveal>
 
       <HydrationBoundary state={dehydrate(queryClient)}>
         <Suspense fallback={<ChatsLoader />}>

@@ -1,7 +1,8 @@
 import React from "react";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
-import ChatInput from "@/components/ui/chat-input";
+
+import NewChatHero from "./_components/new-chat-hero";
 
 export const dynamic = "force-dynamic";
 
@@ -10,18 +11,11 @@ const Page = async () => {
   if (!session) redirect("/login");
 
   const user = session.user;
+  const firstName = user.name?.trim().split(" ")[0] || "there";
 
   return (
-    <section className="h-full flex items-center justify-center">
-      <div className="max-w-3xl mx-auto w-full px-3">
-        <div className="w-full text-center mb-10">
-          <h2 className="text-2xl md:text-4xl font-semibold font-serif">
-            Hello {user.name.split(" ")[0]}, How are you?
-          </h2>
-        </div>
-
-        <ChatInput placeholder="How can I help you today?" />
-      </div>
+    <section className="h-full">
+      <NewChatHero firstName={firstName} />
     </section>
   );
 };

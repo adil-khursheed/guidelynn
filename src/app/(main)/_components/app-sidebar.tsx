@@ -87,20 +87,28 @@ const AppSidebar = async () => {
               <Suspense fallback={<Skeleton className="w-full h-8" />}>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
-                    <User2Icon /> {user.name}
-                    <ChevronUp className="ml-auto" />
+                    <User2Icon />
+                    <span className="truncate">{user.name}</span>
+                    <ChevronUp className="ml-auto" aria-hidden="true" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
               </Suspense>
               <DropdownMenuContent side="top" className="w-full">
                 <DropdownMenuItem>
-                  <span className="flex items-center gap-3">
+                  <span className="flex min-w-0 items-center gap-3">
                     <Avatar>
                       <AvatarFallback>
-                        {user.name.split(" ")[0].charAt(0)}
+                        {user.name?.trim().charAt(0).toUpperCase() || "G"}
                       </AvatarFallback>
                     </Avatar>
-                    {user.name}
+                    <span className="flex min-w-0 flex-col">
+                      <span className="truncate">{user.name}</span>
+                      {user.email && (
+                        <span className="truncate text-xs text-muted-foreground">
+                          {user.email}
+                        </span>
+                      )}
+                    </span>
                   </span>
                 </DropdownMenuItem>
 

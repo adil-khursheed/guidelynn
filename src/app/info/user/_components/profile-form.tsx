@@ -135,8 +135,9 @@ const QuickPicks = ({
             "inline-flex h-7 items-center gap-1.5 rounded-md border px-2.5 text-xs transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50",
             active
               ? "border-primary/40 bg-primary/5 font-medium text-foreground"
-              : "border-border bg-background text-secondary-foreground hover:bg-muted/50 hover:text-foreground dark:text-muted-foreground"
-          )}>
+              : "border-border bg-background text-secondary-foreground hover:bg-muted/50 hover:text-foreground dark:text-muted-foreground",
+          )}
+        >
           {active ? <Check className="size-3 text-primary" /> : null}
           {option}
         </button>
@@ -172,13 +173,15 @@ const StepRail = ({
             className={cn(
               "flex w-full flex-col gap-1 px-4 py-3 text-left transition-colors sm:px-5",
               done && "cursor-pointer hover:bg-muted/40",
-              current && "bg-muted/30"
-            )}>
+              current && "bg-muted/30",
+            )}
+          >
             <span
               className={cn(
                 "flex items-center gap-1.5 text-[10px] uppercase tracking-[0.09em]",
-                done || current ? "text-foreground" : subtleText
-              )}>
+                done || current ? "text-foreground" : subtleText,
+              )}
+            >
               {done ? (
                 <Check className="size-3 text-primary" aria-hidden="true" />
               ) : (
@@ -186,7 +189,7 @@ const StepRail = ({
                   aria-hidden="true"
                   className={cn(
                     "size-1.5 rounded-full",
-                    current ? "bg-primary" : "bg-input"
+                    current ? "bg-primary" : "bg-input",
                   )}
                 />
               )}
@@ -195,10 +198,9 @@ const StepRail = ({
             <span
               className={cn(
                 "truncate text-xs sm:text-sm",
-                current
-                  ? "font-medium text-foreground"
-                  : subtleText
-              )}>
+                current ? "font-medium text-foreground" : subtleText,
+              )}
+            >
               {item.label}
             </span>
           </button>
@@ -206,7 +208,7 @@ const StepRail = ({
             aria-hidden="true"
             className={cn(
               "absolute inset-x-0 bottom-0 h-0.5",
-              index <= step ? "bg-primary" : "bg-transparent"
+              index <= step ? "bg-primary" : "bg-transparent",
             )}
           />
         </li>
@@ -247,7 +249,9 @@ const ProfileForm = ({
     },
   });
 
-  const values = useWatch({ control: form.control }) as Partial<ProfileFormValues>;
+  const values = useWatch({
+    control: form.control,
+  }) as Partial<ProfileFormValues>;
 
   const filled = requiredFields.filter((field) => {
     const value = values[field];
@@ -266,7 +270,7 @@ const ProfileForm = ({
       onError: (error) => {
         console.error("profile update failed", error);
       },
-    })
+    }),
   );
 
   const setHeadingRef = React.useCallback((node: HTMLHeadingElement | null) => {
@@ -288,7 +292,7 @@ const ProfileForm = ({
       toast.success(
         isEditing
           ? "Your file is updated."
-          : "Your file is ready. Let's start the conversation."
+          : "Your file is ready. Let's start the conversation.",
       );
       router.replace("/new");
     } catch {
@@ -348,8 +352,9 @@ const ProfileForm = ({
             <p
               className={cn(
                 "mt-3 max-w-[46ch] text-[15px] leading-6",
-                subtleText
-              )}>
+                subtleText,
+              )}
+            >
               Three short questions so the next conversation starts from where
               you actually are — not a blank page.
             </p>
@@ -367,30 +372,24 @@ const ProfileForm = ({
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div
                     key={step}
-                    initial={
-                      reduceMotion ? false : { opacity: 0, y: 10 }
-                    }
+                    initial={reduceMotion ? false : { opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={
-                      reduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }
-                    }
+                    exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
                     transition={
                       reduceMotion
                         ? { duration: 0 }
                         : { duration: 0.22, ease: [0.16, 1, 0.3, 1] }
-                    }>
+                    }
+                  >
                     <div className="mb-5">
                       <h2
                         ref={setHeadingRef}
                         tabIndex={-1}
-                        className="text-lg font-semibold tracking-[-0.01em] outline-none">
+                        className="text-lg font-semibold tracking-[-0.01em] outline-none"
+                      >
                         {steps[step].title}
                       </h2>
-                      <p
-                        className={cn(
-                          "mt-1 text-sm leading-6",
-                          subtleText
-                        )}>
+                      <p className={cn("mt-1 text-sm leading-6", subtleText)}>
                         {steps[step].hint}
                       </p>
                     </div>
@@ -407,11 +406,13 @@ const ProfileForm = ({
                                 <Select
                                   value={field.value || undefined}
                                   onValueChange={field.onChange}
-                                  disabled={isPending}>
+                                  disabled={isPending}
+                                >
                                   <FormControl>
                                     <SelectTrigger
                                       ref={field.ref}
-                                      className="w-full data-[placeholder]:text-secondary-foreground dark:data-[placeholder]:text-muted-foreground">
+                                      className="w-full data-placeholder:text-secondary-foreground dark:data-placeholder:text-muted-foreground"
+                                    >
                                       <SelectValue placeholder="Highest level" />
                                     </SelectTrigger>
                                   </FormControl>
@@ -419,7 +420,8 @@ const ProfileForm = ({
                                     {educationList.map((item) => (
                                       <SelectItem
                                         key={item.value}
-                                        value={item.value}>
+                                        value={item.value}
+                                      >
                                         {item.label}
                                       </SelectItem>
                                     ))}
@@ -517,7 +519,7 @@ const ProfileForm = ({
                             const years = Number.isNaN(parsed) ? 0 : parsed;
                             const setYears = (next: number) =>
                               field.onChange(
-                                String(Math.min(50, Math.max(0, next)))
+                                String(Math.min(50, Math.max(0, next))),
                               );
 
                             return (
@@ -531,7 +533,8 @@ const ProfileForm = ({
                                     onClick={() => setYears(years - 1)}
                                     disabled={isPending || years <= 0}
                                     aria-label="Remove one year"
-                                    className="size-8 cursor-pointer rounded-sm">
+                                    className="size-8 cursor-pointer rounded-sm"
+                                  >
                                     <Minus className="size-3.5" />
                                   </Button>
                                   <div className="flex flex-1 items-baseline justify-center gap-1.5">
@@ -543,7 +546,7 @@ const ProfileForm = ({
                                           const digits =
                                             event.target.value.replace(
                                               /[^0-9]/g,
-                                              ""
+                                              "",
                                             );
                                           if (!digits) {
                                             field.onChange("");
@@ -553,9 +556,9 @@ const ProfileForm = ({
                                             String(
                                               Math.min(
                                                 50,
-                                                Number.parseInt(digits, 10)
-                                              )
-                                            )
+                                                Number.parseInt(digits, 10),
+                                              ),
+                                            ),
                                           );
                                         }}
                                         disabled={isPending}
@@ -565,12 +568,11 @@ const ProfileForm = ({
                                         placeholder="0"
                                         className={cn(
                                           "w-8 bg-transparent text-center text-base font-semibold tabular-nums outline-none disabled:opacity-50",
-                                          placeholderTone
+                                          placeholderTone,
                                         )}
                                       />
                                     </FormControl>
-                                    <span
-                                      className={cn("text-xs", subtleText)}>
+                                    <span className={cn("text-xs", subtleText)}>
                                       years
                                     </span>
                                   </div>
@@ -581,7 +583,8 @@ const ProfileForm = ({
                                     onClick={() => setYears(years + 1)}
                                     disabled={isPending || years >= 50}
                                     aria-label="Add one year"
-                                    className="size-8 cursor-pointer rounded-sm">
+                                    className="size-8 cursor-pointer rounded-sm"
+                                  >
                                     <Plus className="size-3.5" />
                                   </Button>
                                 </div>
@@ -659,8 +662,9 @@ const ProfileForm = ({
                                 <span
                                   className={cn(
                                     "text-xs font-normal",
-                                    subtleText
-                                  )}>
+                                    subtleText,
+                                  )}
+                                >
                                   Optional
                                 </span>
                               </FormLabel>
@@ -687,16 +691,15 @@ const ProfileForm = ({
                             <span
                               className={cn(
                                 "tabular-nums",
-                                complete ? "text-primary" : subtleText
-                              )}>
+                                complete ? "text-primary" : subtleText,
+                              )}
+                            >
                               {complete ? "Ready" : `${filled} of 7 answers`}
                             </span>
                           </div>
                           <p
-                            className={cn(
-                              "mt-2 text-sm leading-6",
-                              subtleText
-                            )}>
+                            className={cn("mt-2 text-sm leading-6", subtleText)}
+                          >
                             {complete
                               ? "Everything the counselor needs to start from your real context."
                               : "A few required answers are still empty. You can fill them in now or later."}
@@ -705,7 +708,8 @@ const ProfileForm = ({
                             <button
                               type="button"
                               onClick={() => goToStep(missingStep)}
-                              className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                              className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            >
                               Go back and add it
                               <ArrowRight className="size-3.5" />
                             </button>
@@ -730,7 +734,8 @@ const ProfileForm = ({
                       variant="ghost"
                       onClick={() => goToStep(step - 1)}
                       disabled={isPending}
-                      className="cursor-pointer">
+                      className="cursor-pointer"
+                    >
                       <ArrowLeft />
                       Back
                     </Button>
@@ -739,7 +744,8 @@ const ProfileForm = ({
                     type="submit"
                     disabled={isPending}
                     aria-busy={isPending}
-                    className={cn("cursor-pointer", primaryAction)}>
+                    className={cn("cursor-pointer", primaryAction)}
+                  >
                     {isPending ? (
                       <>
                         <Loader2Icon className="animate-spin" />
@@ -769,11 +775,7 @@ const ProfileForm = ({
         </p>
       </div>
 
-      <ProfileFile
-        values={values}
-        name={name}
-        isEditing={isEditing}
-      />
+      <ProfileFile values={values} name={name} isEditing={isEditing} />
     </div>
   );
 };

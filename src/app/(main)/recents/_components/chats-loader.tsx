@@ -3,14 +3,19 @@ import React from "react";
 
 const ChatsLoader = () => {
   return (
-    <div className="max-w-3xl w-full mx-auto flex-1 overflow-y-auto px-3 flex flex-col gap-y-4">
+    <div
+      role="status"
+      aria-live="polite"
+      className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-y-3 overflow-y-auto px-3 pb-10">
+      <span className="sr-only">Loading your chat history</span>
       {Array.from({ length: 6 }).map((_, i) => (
-        <Skeleton
+        <div
           key={i}
-          className="rounded-lg px-3 md:px-6 py-4 md:py-6 border border-input bg-transparent flex flex-col space-y-2">
-          <Skeleton className="max-w-xl w-full h-3 rounded-full" />
-          <Skeleton className="max-w-md w-full h-3 rounded-full" />
-        </Skeleton>
+          aria-hidden="true"
+          className="flex flex-col space-y-2 rounded-xl border border-border bg-card px-4 py-4 md:px-6 md:py-5">
+          <Skeleton className="h-3.5 w-full max-w-sm rounded-full" />
+          <Skeleton className="h-3 w-full max-w-[10rem] rounded-full" />
+        </div>
       ))}
     </div>
   );
