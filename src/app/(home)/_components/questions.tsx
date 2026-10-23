@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 import { subtleText } from "./cta";
 
-const questions = [
+export const faqItems = [
   {
     question: "Who is Guidelynn for?",
     answer:
@@ -53,7 +53,7 @@ const Questions = () => {
           </div>
 
           <div className="border-t border-border">
-            {questions.map((item) => (
+            {faqItems.map((item) => (
               <details
                 key={item.question}
                 className="group border-b border-border py-5">

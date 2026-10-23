@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import React from "react";
 import AppSidebar from "./_components/app-sidebar";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (

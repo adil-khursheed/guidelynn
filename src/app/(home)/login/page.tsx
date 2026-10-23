@@ -6,8 +6,9 @@ import { AuthLink } from "../_components/auth-link";
 import SignInForm from "./_components/signin-form";
 
 export const metadata: Metadata = {
-  title: "Sign in — Guidelynn",
+  title: "Sign in",
   description: "Sign in to continue your career conversations on Guidelynn.",
+  robots: { index: false, follow: true },
 };
 
 const Page = () => {

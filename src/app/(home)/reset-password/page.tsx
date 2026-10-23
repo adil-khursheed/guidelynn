@@ -7,8 +7,9 @@ import { AuthLink } from "../_components/auth-link";
 import ResetPasswordForm from "./_components/reset-password-form";
 
 export const metadata: Metadata = {
-  title: "Set a new password — Guidelynn",
+  title: "Set a new password",
   description: "Choose a new password for your Guidelynn account.",
+  robots: { index: false, follow: true },
 };
 
 const Page = async (props: {

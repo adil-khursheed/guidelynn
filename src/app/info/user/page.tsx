@@ -14,9 +14,10 @@ import ProfileForm from "./_components/profile-form";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Your career profile — Guidelynn",
+  title: "Your career profile",
   description:
     "Three short notes about where you are, what you bring, and where you're headed — so every career conversation starts from your real context.",
+  robots: { index: false, follow: false },
 };
 
 const ProfileSkeleton = () => (

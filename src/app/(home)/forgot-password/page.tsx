@@ -7,9 +7,10 @@ import { AuthLink } from "../_components/auth-link";
 import ForgotPasswordForm from "./_components/forgot-password-form";
 
 export const metadata: Metadata = {
-  title: "Reset your password — Guidelynn",
+  title: "Reset your password",
   description:
     "Request a password reset link for your Guidelynn account by email.",
+  robots: { index: false, follow: true },
 };
 
 const Page = () => {

@@ -6,9 +6,10 @@ import { AuthLink } from "../_components/auth-link";
 import SignUpForm from "./_components/signup-form";
 
 export const metadata: Metadata = {
-  title: "Create an account — Guidelynn",
+  title: "Create an account",
   description:
     "Create your Guidelynn account to keep your profile and career conversations in one place.",
+  robots: { index: false, follow: true },
 };
 
 const Page = () => {

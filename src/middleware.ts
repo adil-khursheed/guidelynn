@@ -4,6 +4,11 @@ import { getSessionCookie } from "better-auth/cookies";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  // Crawler files must stay reachable without a session.
+  if (pathname === "/robots.txt" || pathname === "/sitemap.xml") {
+    return NextResponse.next();
+  }
+
   // Check if it's an auth API route
   const isAuthApiRoute = pathname.startsWith("/api/auth/");
 
